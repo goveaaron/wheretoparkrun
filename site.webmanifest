@@ -1,0 +1,25 @@
+{
+  "name": "wheretoparkrun",
+  "short_name": "wheretoparkrun",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5faf1",
+  "theme_color": "#359450",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

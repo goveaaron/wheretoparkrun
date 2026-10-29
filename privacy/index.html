@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy · wheretoparkrun</title>
+<meta name="description" content="How wheretoparkrun and its Chrome extension handle your parkrun results: they stay in your browser.">
+<meta name="theme-color" content="#359450">
+<link rel="canonical" href="https://wheretoparkrun.com/privacy/">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Figtree:wght@400;500;700&display=swap">
+<style>
+  :root { color-scheme: light; --bg: #f5faf1; --ink: #213628; --muted: #61776a; --grass: #359450; --line: #cfe6cc; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 Figtree, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+  .brand { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink); font: 900 22px/1 "Big Shoulders Display", sans-serif; letter-spacing: .04em; }
+  .brand b { font-weight: 900; }
+  .brand span { color: var(--grass); }
+  h1 { font: 900 clamp(44px, 9vw, 64px)/.95 "Big Shoulders Display", sans-serif; text-transform: uppercase; margin: 36px 0 8px; }
+  h2 { font: 800 26px/1.1 "Big Shoulders Display", sans-serif; text-transform: uppercase; margin: 36px 0 6px; color: var(--grass); }
+  p, li { color: var(--ink); }
+  .lede { color: var(--muted); font-size: 19px; margin: 0 0 8px; }
+  .note { margin-top: 18px; padding: 14px 18px; background: #fff; border: 1.5px solid var(--line); border-radius: 16px; }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; }
+  a { color: #2a7d45; }
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <a class="brand" href="/"><svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><path d="M13 2a8.5 8.5 0 0 0-8.5 8.5C4.5 17 13 24 13 24s8.5-7 8.5-13.5A8.5 8.5 0 0 0 13 2z" fill="#359450"/><circle cx="13" cy="10.5" r="3.4" fill="#f6b73a"/></svg><b>WHERE<span>TO</span>PARKRUN</b></a>
+
+  <h1>Privacy</h1>
+  <p class="lede">Short version: your parkrun results stay in your browser. We don't have accounts, a database or tracking, and we never sell or share anything.</p>
+  <p class="lede">Last updated 29 October 2026.</p>
+
+  <h2>The website</h2>
+  <p>When you paste your results into wheretoparkrun.com, the page works them out on your own device. Your results, your home parkrun and any friends you add are saved in your browser's local storage, so they are there next time. They are not sent to us. To remove someone, click the × next to their name under "Showing results for", or clear this site's data in your browser.</p>
+
+  <h2>The Chrome extension</h2>
+  <ul>
+    <li>It only runs on parkrun results pages (<code>/parkrunner/</code>) that you open yourself. It reads the results table on that page and nothing else.</li>
+    <li>It never fetches parkrun pages in the background and doesn't read any other websites.</li>
+    <li>It keeps the results from the last page you opened in Chrome's extension storage on your device, so the toolbar dropdown can show your picks. That copy is replaced when you open another results page and removed when you uninstall the extension.</li>
+    <li>"Open full planner" opens wheretoparkrun.com with your results packed into the part of the address after the <code>#</code>. Browsers don't send that part to the web server, and the page removes it from the address as soon as it has loaded your results.</li>
+  </ul>
+
+  <h2>What we collect</h2>
+  <p>Nothing about you. There are no analytics, ads, cookies or third-party trackers.</p>
+  <p>Like every website, the site's host (GitHub Pages) keeps standard server logs, such as IP address and the pages requested, to run and protect the service. Fonts load from Google Fonts, which receives a normal request from your browser. Your results are never part of either.</p>
+
+  <h2>Not affiliated with parkrun</h2>
+  <p>wheretoparkrun is an independent fan project. It is not run by or connected to parkrun. Event information comes from parkrun's public events list.</p>
+
+  <div class="note">If this policy changes, the new version will appear on this page with a new date.</div>
+
+  <footer><a href="/">← Back to wheretoparkrun planner</a> · <a href="https://chromewebstore.google.com/detail/wheretoparkrun/mknlldlmakneedjjiepoadapglambojh" target="_blank" rel="noopener">Chrome extension ↗</a></footer>
+</main>
+</body>
+</html>
