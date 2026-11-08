@@ -480,6 +480,18 @@ section.block { margin-top: 40px; display: grid; gap: 16px; }
 .pill { flex: none; font-size: 12.5px; font-weight: 700; border-radius: 999px; padding: 3px 11px; background: var(--surface-2); border: 1px solid var(--line); white-space: nowrap; }
 .pill.done { background: var(--gold); color: #3a2a00; border-color: var(--gold); }
 .pill.loc { background: var(--grass-soft); border-color: transparent; }
+.alpha-corner { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.alpha-stepper { display: inline-flex; align-items: center; background: var(--grass-soft); border: 1px solid #b5dec0; border-radius: 999px; padding: 1px; box-shadow: 0 1px 4px rgba(40, 90, 50, .08); }
+.alpha-stepper button { border: 0; background: transparent; color: var(--grass-deep); font-family: var(--body); font-size: 11.5px; font-weight: 800; cursor: pointer; padding: 3px 8px; border-radius: 999px; display: inline-flex; align-items: center; gap: 3px; line-height: 1.2; transition: background .15s, color .15s; white-space: nowrap; }
+.alpha-stepper button:hover { background: var(--grass); color: #ffffff; }
+.alpha-stepper .alpha-prev { padding: 3px 6px; font-size: 13px; border-right: 1px solid rgba(53, 148, 80, .2); border-radius: 999px 0 0 999px; }
+.alpha-stepper .alpha-next { border-radius: 0 999px 999px 0; }
+.alpha-strip { display: flex; flex-wrap: wrap; gap: 4px; margin: -2px 0 2px; }
+.alpha-chip { border: 1px solid var(--line); background: var(--surface-2); color: var(--muted); border-radius: 999px; padding: 2px 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; transition: all .15s; font-variant-numeric: tabular-nums; }
+.alpha-chip:hover { border-color: var(--grass); color: var(--ink); }
+.alpha-chip.on { background: var(--grass); color: #ffffff; border-color: var(--grass); }
+.alpha-chip.done { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-ink); }
+.alpha-chip.done.on { background: var(--gold); color: #3a2a00; }
 .bar { height: 6px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
 .bar i { display: block; height: 100%; background: var(--grass); border-radius: 999px; }
 .ch.done .bar i { background: var(--gold); }
@@ -1005,10 +1017,25 @@ function gainsFor(s, ev, ctx) {
   const isNew = !s.visited.has(keyOf(ev, ev.name));
   const l = ev.init;
   if (isNew) {
-    // Alphabeteer
-    if (ALPHA.includes(l) && !s.init[l]) {
-      const have = ALPHA.filter((x) => s.init[x]).length + 1, done = have === 25;
-      out.push({ id: "alpha", label: done ? "Completes Alphabeteer" : "Alphabeteer", what: "Letter " + l.toUpperCase(), meta: `${have}/25`, pts: done ? COMPLETE : prog(have, 25), done, token: "L:" + l });
+    // Alphabeteer: takes into account your primary incomplete alphabet AND upcoming alphabets (#2, #3, etc.)
+    if (ALPHA.includes(l)) {
+      const curCount = s.init[l] || 0;
+      const k = curCount + 1;
+      let firstInc = 1;
+      while (ALPHA.every((x) => (s.init[x] || 0) >= firstInc)) firstInc++;
+      const haveK = ALPHA.filter((x) => (s.init[x] || 0) >= k).length + 1;
+      const doneK = haveK === 25;
+      if (k === firstInc) {
+        const lbl = k === 1 ? (doneK ? "Completes Alphabeteer" : "Alphabeteer") : (doneK ? `Completes Alphabeteer #${k}` : `Alphabeteer #${k}`);
+        out.push({ id: "alpha", alphaNum: k, glyph: l, label: lbl, what: k === 1 ? "Letter " + l.toUpperCase() : `Letter ${l.toUpperCase()} (${ordinal(k)} A–Z)`, meta: `${haveK}/25`, pts: doneK ? COMPLETE : prog(haveK, 25), done: doneK, token: "L:" + l + (k > 1 ? "#" + k : "") });
+      } else if (k > firstInc) {
+        const ahead = k - firstInc;
+        if (haveK >= 2) {
+          const basePts = doneK ? 60 : prog(haveK, 25, 4, 14);
+          const pts = basePts / (ahead === 1 ? 1 : ahead * 1.2);
+          out.push({ id: "alpha", alphaNum: k, glyph: l, label: doneK ? `Completes Alphabeteer #${k}` : `Alphabeteer #${k}`, what: `Letter ${l.toUpperCase()} (${ordinal(k)} A–Z)`, meta: `${haveK}/25`, pts, done: doneK, minor: ahead > 1 && !doneK, token: ahead === 1 ? `L:${l}#${k}` : undefined });
+        }
+      }
     }
     // Pirates: seven Cs and an R
     if ((l === "c" && (s.init.c || 0) < 7) || (l === "r" && !s.init.r)) {
@@ -1179,9 +1206,60 @@ function board(ctx) {
   const add = (o) => out.push(o);
 
   // Location challenges
-  const aHave = ALPHA.filter((l) => s.init[l]).length;
-  add({ name: "Alphabeteer", loc: true, blurb: "A parkrun starting with every letter except X. Green = done, gold = in your Top 5 picks.", have: aHave, need: 25,
-    body: tiles(ALPHA.map((l) => tile(l, s.init[l], (firstBy[l] || []).join(", "), "", pickByLetter[l], l))) });
+  const maxInit = Math.max(1, ...ALPHA.map((l) => s.init[l] || 0));
+  const maxAlpha = Math.max(2, maxInit + (ALPHA.every((l) => (s.init[l] || 0) >= maxInit) ? 1 : 0));
+  let firstIncAlpha = 1;
+  while (firstIncAlpha < maxAlpha && ALPHA.every((l) => (s.init[l] || 0) >= firstIncAlpha)) firstIncAlpha++;
+  const curAlpha = typeof alphaView === "number" && alphaView >= 1 ? Math.min(maxAlpha, alphaView) : firstIncAlpha;
+  const aHavePrimary = ALPHA.filter((l) => (s.init[l] || 0) >= firstIncAlpha).length;
+  const aHaveCur = ALPHA.filter((l) => (s.init[l] || 0) >= curAlpha).length;
+  const pickByAlphaLetter = {};
+  if (prefs.view === "plan") {
+    const sim = {};
+    ALPHA.forEach((l) => { sim[l] = s.init[l] || 0; });
+    pickRows.forEach((r, idx) => {
+      const l = r.ev.init;
+      if (!l) return;
+      sim[l] = (sim[l] || 0) + 1;
+      if (sim[l] === curAlpha && pickByAlphaLetter[l] === undefined) pickByAlphaLetter[l] = { idx, name: r.ev.name };
+    });
+  } else {
+    pickRows.forEach((r, idx) => {
+      const l = r.ev.init;
+      if (l && (s.init[l] || 0) === curAlpha - 1 && pickByAlphaLetter[l] === undefined) pickByAlphaLetter[l] = { idx, name: r.ev.name };
+    });
+  }
+  const alphaHelps = new Set(Object.values(pickByAlphaLetter).map((p) => p.idx));
+  const alphaStrip = `<div class="alpha-strip" role="tablist" aria-label="Upcoming alphabets">`
+    + Array.from({ length: maxAlpha }, (_, idx) => {
+      const k = idx + 1;
+      const hk = ALPHA.filter((l) => (s.init[l] || 0) >= k).length;
+      return `<button type="button" class="alpha-chip ${k === curAlpha ? "on" : ""} ${hk === 25 ? "done" : ""}" data-alpha-set="${k}" title="View ${ordinal(k)} Alphabet (${hk}/25 letters)">${ordinal(k)} · ${hk}/25</button>`;
+    }).join("")
+    + `</div>`;
+  add({
+    name: "Alphabeteer",
+    displayTitle: curAlpha > 1 ? `Alphabeteer #${curAlpha}` : "Alphabeteer",
+    loc: true,
+    blurb: curAlpha === 1
+      ? "A parkrun starting with every letter except X. Green = done, gold = in your Top 5 picks."
+      : `Your ${ordinal(curAlpha)} A–Z alphabet (${aHaveCur}/25 letters with at least ${curAlpha} different parkruns).`,
+    have: aHaveCur,
+    sortHave: aHavePrimary,
+    need: 25,
+    customHelps: alphaHelps,
+    alphaNav: { cur: curAlpha, max: maxAlpha },
+    body: alphaStrip + tiles(ALPHA.map((l) => {
+      const haveL = s.init[l] || 0;
+      const on = haveL >= curAlpha;
+      const runAtK = (firstBy[l] || [])[curAlpha - 1];
+      const allL = (firstBy[l] || []).join(", ");
+      const tipText = on
+        ? (curAlpha === 1 ? allL : `${runAtK} (${ordinal(curAlpha)} '${l.toUpperCase()}' parkrun · all ${haveL}: ${allL})`)
+        : (curAlpha === 1 ? "" : `Still needed for Alphabet #${curAlpha} (have ${haveL}/${curAlpha}${allL ? ": " + allL : ""}) — click to see closest unvisited '${l.toUpperCase()}' parkrun`);
+      return tile(l, on, tipText, "", pickByAlphaLetter[l], l);
+    })),
+  });
   const cs = Math.min(s.init.c || 0, 7), rs = Math.min(s.init.r || 0, 1);
   add({ name: "Pirates!", loc: true, blurb: "Seven Cs and an R. Say it out loud.", have: cs + rs, need: 8,
     body: tiles([...Array(7)].map((_, i) => tile("C", i < cs, (firstBy.c || [])[i], "", i === cs ? pickByLetter.c : null, "c")).concat(tile("R", rs, (firstBy.r || [])[0], "", !rs ? pickByLetter.r : null, "r"))) });
@@ -1312,6 +1390,7 @@ function showStart() {
   loadRunner({ ...DATA.sample, example: true });
 }
 let addingFriend = null;
+let alphaView = 1;
 
 function loadRunner(r) {
   current = r;
@@ -1319,6 +1398,8 @@ function loadRunner(r) {
   setIntake(!!r.example);
   const runs = hydrate(r);
   ctx = buildContext(runs, r.name, r.home);
+  alphaView = 1;
+  while (ALPHA.every((l) => (ctx.s.init[l] || 0) >= alphaView)) alphaView++;
   origin = ctx.home ? { lat: ctx.home.lat, lon: ctx.home.lon, label: ctx.home.name + " parkrun", kind: "home" } : null;
   $("#example").hidden = !r.example;
   if ($("#board-try-banner")) $("#board-try-banner").hidden = !r.example;
@@ -1489,7 +1570,7 @@ const GSTYLE = {
 function gainHtml(g) {
   const st = GSTYLE[g.id] || { c: "#3a9a58", icon: ICON.pin };
   let icon = st.icon, iconCls = "";
-  if (icon === "letter") icon = esc((g.token || "L:?").slice(2).toUpperCase());
+  if (icon === "letter") icon = esc((g.glyph || (g.token || "L:?").slice(2, 3)).toUpperCase());
   else if (icon === "flag") { icon = esc(g.what.split(" ")[0]); iconCls = "emoji"; }
   else if (icon === "100") icon = g.meta.includes("/200") ? "200" : "100";
   const name = g.label.replace(/^Completes /, "");
@@ -1497,7 +1578,7 @@ function gainHtml(g) {
   const m = /(\d+)\/(\d+)/.exec(g.meta);
   const metaHtml = esc(g.meta).replace(/(\d+)\/(\d+)/, '<span data-count="$1">$1</span>/<span data-count="$2">$2</span>');
   const near = g.nearest !== undefined ? ` · nearest${g.nearest ? `, next ${fmtKm(g.nearest)}` : ""}` : "";
-  return `<div class="gtile ${g.done ? "done" : ""} ${g.minor ? "minor" : ""}" style="--gc:${st.c}" data-gid="${g.id}" role="button" tabindex="0" title="Click to jump to ${esc(name)} on the Challenge Board">
+  return `<div class="gtile ${g.done ? "done" : ""} ${g.minor ? "minor" : ""}" style="--gc:${st.c}" data-gid="${g.id}"${g.alphaNum ? ` data-alpha="${g.alphaNum}"` : ""} role="button" tabindex="0" title="Click to jump to ${esc(name)} on the Challenge Board">
     ${g.done ? '<span class="gribbon">★ Completes!</span>' : ""}
     <span class="gicon ${iconCls}" aria-hidden="true">${icon}</span>
     <span class="gtext"><span class="gname">${esc(name)}</span><b>${esc(what)}</b><span class="gmeta">${metaHtml}${near}</span>${m ? `<span class="gbar"><i style="width:${Math.min(100, (+m[1] / +m[2]) * 100).toFixed(0)}%"></i></span>` : ""}</span>
@@ -2013,34 +2094,40 @@ function renderBoard() {
     const mine = (r.per.find((p) => p.m.isMe) || { gains: [] }).gains;
     for (const g of mine) if (g.id !== "tour" || g.done) (helps[g.id] = helps[g.id] || new Set()).add(i);
   });
-  const isDone = (c) => !c.countOnly && c.need > 0 && c.have >= c.need;
+  const isDone = (c) => !c.countOnly && c.need > 0 && (c.sortHave ?? c.have) >= c.need;
   // close enough to taste: two or fewer to go, or 85% of the way
-  const almost = (c) => !isDone(c) && !c.countOnly && c.need >= 3 && (c.need - c.have <= 2 || c.have / c.need >= 0.85);
-  const card = (c) => {
-    const complete = isDone(c), close = almost(c);
+  const almost = (c) => !isDone(c) && !c.countOnly && c.need >= 3 && (c.need - (c.sortHave ?? c.have) <= 2 || (c.sortHave ?? c.have) / c.need >= 0.85);
+  const card = (c, skipDenomAnim = false) => {
+    const complete = !c.countOnly && c.need > 0 && c.have >= c.need;
+    const close = !complete && !c.countOnly && c.need >= 3 && (c.need - c.have <= 2 || c.have / c.need >= 0.85);
     const pct = c.need ? Math.min(100, (c.have / c.need) * 100) : 0;
     const pill = complete
       ? `${TROPHY}${esc(c.doneText || "Done")}`
       : c.statText
         ? esc(c.statText).replace(/(\d+)/g, '<span data-count="$1">$1</span>')
-        : `<span data-count="${c.have}">${c.have}</span> / <span data-count="${c.need}">${c.need}</span>`;
-    const h = !complete && helps[BOARD_GAIN[c.name]];
+        : `<span data-count="${c.have}">${c.have}</span> / ${skipDenomAnim ? c.need : `<span data-count="${c.need}">${c.need}</span>`}`;
+    const h = !complete && (c.customHelps ? (c.customHelps.size ? c.customHelps : null) : helps[BOARD_GAIN[c.name]]);
     const word = prefs.view === "plan" ? "Week" : "Pick";
     const left = c.need - c.have;
+    const nextAlpha = c.alphaNav ? (c.alphaNav.cur % c.alphaNav.max) + 1 : 1;
+    const cornerHtml = c.alphaNav
+      ? `<div class="alpha-corner"><span class="pill ${complete ? "done" : ""}">${pill}</span><div class="alpha-stepper" role="group" aria-label="Browse upcoming alphabets"><button type="button" class="alpha-prev" data-alpha-step="-1" title="Previous alphabet" aria-label="Previous alphabet">‹</button><button type="button" class="alpha-next" data-alpha-step="1" title="Click to see next alphabet ahead (#${nextAlpha} of ${c.alphaNav.max})">Next #${nextAlpha} ▸</button></div></div>`
+      : `<div style="display:grid;gap:4px;justify-items:end"><span class="pill ${complete ? "done" : ""}">${pill}</span>${!complete && c.doneText ? `<span class="pill done">${TROPHY}${esc(c.doneText)}</span>` : ""}</div>`;
     return `<div class="ch ${complete ? "done" : ""} ${close ? "almost" : ""}" data-gid="${BOARD_GAIN[c.name] || ""}" data-cname="${esc(c.name)}">
-      <div class="ch-head"><div><h3>${complete ? TROPHY : ""}${c.name === "Pirates!" ? '<span class="jolly" aria-hidden="true">' + ICON.pirate.replace('stroke="#ffffff" stroke-width="1.8"', 'stroke="#8a6a4e" stroke-width="1.8"') + "</span>" : ""}${esc(c.name)}</h3><p>${c.blurb}</p></div>
-        <div style="display:grid;gap:4px;justify-items:end"><span class="pill ${complete ? "done" : ""}">${pill}</span>${!complete && c.doneText ? `<span class="pill done">${TROPHY}${esc(c.doneText)}</span>` : ""}</div></div>
+      <div class="ch-head"><div><h3>${complete ? TROPHY : ""}${c.name === "Pirates!" ? '<span class="jolly" aria-hidden="true">' + ICON.pirate.replace('stroke="#ffffff" stroke-width="1.8"', 'stroke="#8a6a4e" stroke-width="1.8"') + "</span>" : ""}${esc(c.displayTitle || c.name)}</h3><p>${c.blurb}</p></div>
+        ${cornerHtml}</div>
       ${close ? `<div class="almost-tag">${FLAME}Almost there! <span>Just <b data-count="${left}">${left}</b> to go</span></div>` : ""}
       ${h ? `<div class="helps">${word}${h.size > 1 ? "s" : ""} ${[...h].sort().map((i) => `<button data-pick="${i}" aria-label="Show ${word.toLowerCase()} ${i + 1}">${i + 1}</button>`).join("")} help${h.size > 1 ? "" : "s"} with this</div>` : ""}
       ${c.need > 1 && !complete ? `<div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>` : ""}
       ${c.body}
     </div>`;
   };
+  renderBoard.cardFn = card;
   const todo = items.filter((c) => !isDone(c)).sort((x, y) =>
     (x.countOnly ? 1 : 0) - (y.countOnly ? 1 : 0)
     || (almost(y) ? 1 : 0) - (almost(x) ? 1 : 0)
     || (helps[BOARD_GAIN[y.name]] ? 1 : 0) - (helps[BOARD_GAIN[x.name]] ? 1 : 0)
-    || (y.need ? y.have / y.need : 0) - (x.need ? x.have / x.need : 0));
+    || (y.need ? (y.sortHave ?? y.have) / y.need : 0) - (x.need ? (x.sortHave ?? x.have) / x.need : 0));
   lastHelps = helps;
   const done = items.filter(isDone);
   const closeCount = todo.filter(almost).length;
@@ -2334,7 +2421,12 @@ $("#group").addEventListener("click", (e) => {
   savePrefs();
   renderPicks();
 });
-function jumpToChallenge(gid) {
+function jumpToChallenge(gid, alphaNum) {
+  if (gid === "alpha" && alphaNum && alphaNum !== alphaView) {
+    alphaView = alphaNum;
+    boardRevealed = true;
+    renderBoard();
+  }
   let card = document.querySelector(`#board .ch[data-gid="${gid}"]`);
   if (!card && boardFilter !== "all") {
     boardFilter = "all";
@@ -2348,10 +2440,10 @@ function jumpToChallenge(gid) {
   card.classList.add("flash");
   setTimeout(() => card.classList.remove("flash"), 4800);
 }
-$("#cards").addEventListener("keydown", (e) => { const t = e.target.closest(".gtile"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); jumpToChallenge(t.dataset.gid); } });
+$("#cards").addEventListener("keydown", (e) => { const t = e.target.closest(".gtile"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); jumpToChallenge(t.dataset.gid, +t.dataset.alpha || 0); } });
 $("#cards").addEventListener("click", (e) => {
   const tile = e.target.closest(".gtile");
-  if (tile) { jumpToChallenge(tile.dataset.gid); return; }
+  if (tile) { jumpToChallenge(tile.dataset.gid, +tile.dataset.alpha || 0); return; }
   const seeBoard = e.target.closest("[data-see-board]");
   if (seeBoard) {
     const idx = +seeBoard.dataset.seeBoard;
@@ -2577,7 +2669,40 @@ $("#board-filters")?.addEventListener("click", (e) => {
   boardFilter = b.dataset.bf;
   renderBoard();
 });
+  function updateAlphaCardInPlace() {
+  const oldEl = document.querySelector('#board .ch[data-gid="alpha"]');
+  if (!oldEl || !renderBoard.cardFn) { renderBoard(); return; }
+  const prevSpan = oldEl.style.gridRowEnd;
+  const prevMinH = Math.max(oldEl.offsetHeight, parseFloat(oldEl.style.minHeight) || 0);
+  const alphaItem = board(ctx).find((c) => c.name === "Alphabeteer");
+  if (!alphaItem) return;
+  const tmp = document.createElement("div");
+  tmp.innerHTML = renderBoard.cardFn(alphaItem, true);
+  const newEl = tmp.firstElementChild;
+  newEl.classList.add("in-view");
+  newEl.dataset.rev = "1";
+  if (prevMinH) newEl.style.minHeight = prevMinH + "px";
+  if (prevSpan) newEl.style.gridRowEnd = prevSpan;
+  oldEl.replaceWith(newEl);
+  if (boardRO) boardRO.observe(newEl);
+  packBoard(false);
+}
 $("#board").addEventListener("click", (e) => {
+  const alphaStepBtn = e.target.closest("[data-alpha-step]");
+  if (alphaStepBtn) {
+    const maxInit = Math.max(1, ...ALPHA.map((l) => ctx.s.init[l] || 0));
+    const maxAlpha = Math.max(2, maxInit + (ALPHA.every((l) => (ctx.s.init[l] || 0) >= maxInit) ? 1 : 0));
+    const step = +alphaStepBtn.dataset.alphaStep;
+    alphaView = ((alphaView - 1 + step + maxAlpha) % maxAlpha) + 1;
+    updateAlphaCardInPlace();
+    return;
+  }
+  const alphaSetBtn = e.target.closest("[data-alpha-set]");
+  if (alphaSetBtn) {
+    alphaView = +alphaSetBtn.dataset.alphaSet || 1;
+    updateAlphaCardInPlace();
+    return;
+  }
   if (e.target.closest("[data-bf-reset]")) { boardFilter = "all"; renderBoard(); return; }
   if (e.target.closest("#show-all")) { boardAll = !boardAll; renderBoard(); if (!boardAll) $("#board").scrollIntoView({ block: "start" }); return; }
   if (e.target.closest("#cabinet-toggle")) { cabinetOpen = !cabinetOpen; renderBoard(); return; }
