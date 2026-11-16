@@ -287,11 +287,13 @@ section.block { margin-top: 40px; display: grid; gap: 16px; }
 .pill-select:hover { border-color: var(--grass); color: var(--ink); }
 .pill-select.active { background: var(--grass-soft); border-color: var(--grass); color: var(--grass-deep); font-weight: 700; }
 .pill-select.gold { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-ink); font-weight: 700; }
-.pill-select select { appearance: none; -webkit-appearance: none; border: 0; background: transparent; padding: 6px 26px 6px 12px; font: inherit; color: inherit; cursor: pointer; border-radius: 999px; max-width: 225px; text-overflow: ellipsis; outline: none; }
+.pill-select select { appearance: none; -webkit-appearance: none; border: 0; background: transparent; padding: 6px 26px 6px 12px; font: inherit; color: inherit; cursor: pointer; border-radius: 999px; max-width: 270px; text-overflow: ellipsis; outline: none; }
 .pill-select::after { content: "▾"; position: absolute; right: 10px; pointer-events: none; font-size: 11px; opacity: .75; }
 .focus-chips { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .focus-chip { display: inline-flex; align-items: center; gap: 5px; border: 1.5px solid var(--gold); background: linear-gradient(135deg, #fffdf4, var(--gold-soft)); color: var(--gold-ink); font-size: 12.5px; font-weight: 700; border-radius: 999px; padding: 5px 10px; cursor: pointer; transition: transform .15s, box-shadow .15s; }
+.focus-chip.region-chip { border-color: var(--grass); background: linear-gradient(135deg, #f6fcf5, var(--grass-soft)); color: var(--grass-deep); }
 .focus-chip:hover { transform: translateY(-1px); box-shadow: 0 3px 8px -3px rgba(214, 137, 8, .35); }
+.focus-chip.region-chip:hover { box-shadow: 0 3px 8px -3px rgba(42, 125, 69, .32); }
 .focus-chip span { opacity: .75; font-weight: 400; font-size: 14px; line-height: 1; }
 .unit-seg { margin-left: auto; display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px; gap: 2px; }
 .unit-seg button { border: 0; background: transparent; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 700; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; }
@@ -366,8 +368,50 @@ section.block { margin-top: 40px; display: grid; gap: 16px; }
 .origin-empty { padding: 10px 12px; color: var(--muted); font-size: 14px; }
 
 .picks { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 18px; align-items: start; }
+.picks.map-expanded { grid-template-columns: minmax(0, 1fr); }
 .radar-card { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; display: grid; gap: 8px; }
-.radar-card svg { width: 100%; height: auto; display: block; }
+.picks.map-expanded .radar-card { position: static; }
+.radar-top { display: flex; align-items: center; justify-content: space-between; gap: 6px 10px; flex-wrap: wrap; }
+.map-expand-btn { border: 1px solid var(--line); background: var(--surface-2); color: var(--grass-deep); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: border-color .15s, background .15s, transform .15s; white-space: nowrap; }
+.map-expand-btn:hover { border-color: var(--grass); background: var(--grass-soft); transform: translateY(-1px); }
+.map-expand-btn.has-region { border-color: var(--gold); background: var(--gold-soft); color: var(--gold-ink); }
+.map-expand-btn[aria-expanded="true"] { background: var(--grass); border-color: var(--grass); color: #ffffff; }
+.area-explorer { display: grid; gap: 9px; }
+.exp-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 7px 10px; padding: 8px 10px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+.exp-presets { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.exp-preset { border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 12.5px; font-weight: 600; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.exp-preset:hover { border-color: var(--grass); background: var(--grass-soft); }
+.exp-preset[aria-pressed="true"] { background: var(--grass); border-color: var(--grass); color: #ffffff; font-weight: 700; }
+.exp-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: auto; }
+.exp-tools { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 2px; gap: 2px; }
+.exp-tool { border: 0; background: transparent; color: var(--muted); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; cursor: pointer; transition: background .15s, color .15s; white-space: nowrap; }
+.exp-tool[aria-pressed="true"] { background: var(--grass); color: #ffffff; }
+.exp-tool[data-exp-tool="draw"][aria-pressed="true"] { background: var(--gold); color: #3a2a00; }
+.exp-search-area { position: absolute; z-index: 3; top: 10px; left: 50%; transform: translateX(-50%); width: max-content; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: #ffffff; color: var(--ink); font-size: 13px; font-weight: 700; padding: 7px 14px; border-radius: 999px; cursor: pointer; box-shadow: 0 3px 12px rgba(20, 50, 30, .2); transition: border-color .15s, color .15s; }
+.exp-search-area:hover { border-color: var(--grass); color: var(--grass-deep); }
+.exp-search-area svg { width: 14px; height: 14px; color: var(--grass); flex: none; }
+.exp-draw-bar { position: absolute; z-index: 3; top: 10px; left: 50%; transform: translateX(-50%); width: max-content; max-width: calc(100% - 20px); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 5px 8px; background: rgba(255, 255, 255, .96); border: 1px solid #eed08a; color: var(--gold-ink); font-size: 12.5px; font-weight: 600; padding: 6px 12px; border-radius: 14px; box-shadow: 0 3px 12px rgba(20, 50, 30, .16); }
+.exp-draw-bar button { border: 1px solid var(--line); background: var(--surface); color: var(--grass-deep); font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; cursor: pointer; }
+.exp-draw-bar button:hover { border-color: var(--grass); background: var(--grass-soft); }
+.exp-draw-bar .exp-draw-finish { background: var(--grass); border-color: var(--grass); color: #ffffff; }
+html.ext .map-expand-btn, html.ext #area-explorer { display: none !important; }
+.exp-act { border: 1px solid var(--line); background: var(--surface); color: var(--grass-deep); font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.exp-act:hover { border-color: var(--grass); background: var(--grass-soft); }
+.exp-act.exp-clear { color: var(--gold-ink); border-color: #eed08a; background: #fffbf0; }
+.exp-act.exp-clear:hover { border-color: var(--gold); background: var(--gold-soft); }
+.explore-stage { position: relative; width: 100%; height: 440px; border-radius: 14px; overflow: hidden; border: 1.5px solid #bcd9c4; background: var(--sea); user-select: none; }
+#explore-canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+#explore-canvas.draw-mode { cursor: crosshair; }
+#explore-canvas.on-handle { cursor: move; }
+#explore-canvas.panning { cursor: grabbing; }
+.exp-zoom { position: absolute; right: 10px; bottom: 10px; display: flex; flex-direction: column; gap: 4px; z-index: 3; }
+.exp-zoom button { width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--line); background: rgba(255, 255, 255, .94); color: var(--ink); font-size: 18px; font-weight: 700; line-height: 1; cursor: pointer; display: grid; place-items: center; box-shadow: 0 2px 8px rgba(0, 0, 0, .12); }
+.exp-zoom button:hover { border-color: var(--grass); background: #ffffff; color: var(--grass-deep); }
+.explore-tip { position: absolute; z-index: 4; pointer-events: none; max-width: 280px; background: rgba(255, 255, 255, .97); border: 1.5px solid #bcd9c4; border-radius: 12px; padding: 8px 11px; font-size: 12.5px; line-height: 1.35; color: var(--ink); box-shadow: 0 8px 22px -6px rgba(20, 50, 30, .26); }
+.explore-tip b { font-weight: 800; color: var(--ink); }
+.explore-tip .tip-pts { display: inline-block; padding: 1px 7px; border-radius: 999px; background: var(--gold-soft); border: 1px solid #f2c14e; color: var(--gold-ink); font-weight: 800; font-size: 11.5px; margin-left: 4px; }
+@media (max-width: 700px) { .explore-stage { height: 310px; } }
+.radar-card #radar svg { width: 100%; height: auto; display: block; }
 .radar-card .town { font: 700 9.5px var(--body); fill: #4d6455; text-anchor: middle; paint-order: stroke; stroke: #ffffff; stroke-width: 3px; stroke-linejoin: round; letter-spacing: .02em; }
 .radar-card .ringlabel { font: 700 9.5px var(--body); fill: #5c7364; }
 .radar-card .rtok { cursor: pointer; }
@@ -575,6 +619,9 @@ section.block { margin-top: 40px; display: grid; gap: 16px; }
 .gflag:hover { background: var(--surface-2); border-color: var(--grass); transform: translateY(-1px); }
 .gflag.done { background: var(--grass-soft); border-color: #9dd4a8; color: var(--grass-deep); font-weight: 700; }
 .gflag.sel { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(246, 183, 58, .35); background: var(--gold-soft); color: var(--gold-ink); font-weight: 800; }
+.gflag .grank { font-family: var(--mono); font-size: 10.5px; font-weight: 700; color: var(--grass-deep); background: var(--grass-soft); padding: 1px 5px; border-radius: 999px; line-height: 1.3; }
+.gflag.sel .grank { background: #ffe299; color: #4a3000; }
+.gflag .gticks { font-size: 11px; font-weight: 700; color: var(--gold-ink); background: #fff5db; border: 1px solid #f0cf7b; padding: 0 5px; border-radius: 999px; line-height: 1.35; }
 
 /* Share Modal & Story Carousel Modal */
 .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(14, 30, 20, .62); backdrop-filter: blur(5px); display: grid; place-items: center; padding: 16px; animation: fadeInModal .2s ease-out; }
@@ -785,12 +832,42 @@ footer p { margin: 0; max-width: 90ch; }
       </div>
     </div>
     <p class="hint" id="view-hint"></p>
-    <div class="picks">
+    <div class="picks" id="picks-grid">
       <div class="radar-card">
-        <span class="eyebrow" id="radar-cap">Distance from your start</span>
+        <div class="radar-top">
+          <span class="eyebrow" id="radar-cap">Distance from your start</span>
+          <button type="button" class="map-expand-btn" id="map-expand-btn" aria-expanded="false" title="Expand map to explore high-scoring courses and select a region">⤢ Select area on map</button>
+        </div>
         <div id="radar"></div>
+        <div class="area-explorer" id="area-explorer" hidden>
+          <div class="exp-bar">
+            <div class="exp-presets" id="exp-presets" role="group" aria-label="Quick trip regions"></div>
+            <div class="exp-actions">
+              <div class="exp-tools" id="exp-tools" role="group" aria-label="Map interaction mode">
+                <button type="button" class="exp-tool" data-exp-tool="pan" aria-pressed="true" title="Drag to move the map; scroll, pinch or double-click to zoom">✋ Move</button>
+                <button type="button" class="exp-tool" data-exp-tool="draw" aria-pressed="false" title="Draw your own area: click to add points, or hold and drag to sketch it">✏️ Draw area</button>
+              </div>
+              <button type="button" class="exp-act exp-clear" id="exp-clear" hidden title="Clear the selected area">Clear area ×</button>
+            </div>
+          </div>
+          <div class="explore-stage" id="explore-stage">
+            <canvas id="explore-canvas" aria-label="Interactive parkrun trip area selector map"></canvas>
+            <button type="button" class="exp-search-area" id="exp-search-area" hidden title="Rank the parkruns shown on the map right now"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Search this area</button>
+            <div class="exp-draw-bar" id="exp-draw-bar" hidden>
+              <span id="exp-draw-hint">Click the map to add points, or hold and drag to sketch your area</span>
+              <button type="button" id="exp-draw-undo" data-draw-act="undo" hidden>↶ Undo</button>
+              <button type="button" class="exp-draw-finish" id="exp-draw-finish" data-draw-act="finish" hidden>✓ Finish</button>
+              <button type="button" data-draw-act="cancel">Cancel</button>
+            </div>
+            <div class="exp-zoom" role="group" aria-label="Map zoom">
+              <button type="button" data-exp-zoom="1" aria-label="Zoom in" title="Zoom in">+</button>
+              <button type="button" data-exp-zoom="-1" aria-label="Zoom out" title="Zoom out">−</button>
+            </div>
+            <div class="explore-tip" id="explore-tip" hidden></div>
+          </div>
+        </div>
         <div class="radar-sel" id="radar-sel"></div>
-        <div class="legend" id="radar-legend"><span data-vor><i class="sq" style="background:#a9d8b4"></i>Areas you've run</span><span data-vor><i class="sq" style="background:#fdfbf3;border:1px solid #d9d2b8"></i>Still to run</span><span><i style="background:var(--pin)"></i>Your picks</span><span><i style="background:var(--gold)"></i>Selected</span></div>
+        <div class="legend" id="radar-legend"><span data-vor><i class="sq" style="background:#a9d8b4"></i>Areas you've run</span><span data-vor><i class="sq" style="background:#fdfbf3;border:1px solid #d9d2b8"></i>Still to run</span><span data-exp-leg hidden><i style="background:#f6b73a;border:1.5px solid #9a5d00"></i>Top scores</span><span data-exp-leg hidden><i style="background:#2e8b47"></i>Unvisited</span><span><i style="background:var(--pin)"></i>Your picks</span><span><i style="background:var(--gold)"></i>Selected</span></div>
         <p class="legend-note" id="radar-legend-note">Each patch is the area closest to one parkrun.</p>
       </div>
       <div class="cards" id="cards"></div>
@@ -1196,19 +1273,76 @@ function gainsFor(s, ev, ctx) {
   return out;
 }
 
-/* ---------- ranking ---------- */
+/* ---------- ranking & trip regions ---------- */
 const MODES = [
   { id: "local", label: "Nearby", max: 30, per: 0.9 },
   { id: "day", label: "Day trip", max: 110, per: 0.3 },
   { id: "away", label: "Weekend away", max: 500, per: 0.07 },
   { id: "any", label: "Anywhere", max: Infinity, per: 0.004 },
 ];
-function modeHint(m, cc = null) {
+const REGION_PRESETS = [
+  { id: "med", icon: "☀️", label: "Warm Europe & Med", box: [-10.5, 35.0, 22.0, 46.8], view: { lat: 41.2, lon: 8.2, spanLat: 14.5 } },
+  { id: "europe", icon: "🇪🇺", label: "Mainland Europe", box: [-10.5, 35.0, 31.5, 65.5], exclCC: [97, 42, 101, 102, 103], view: { lat: 49.5, lon: 11.5, spanLat: 26 } },
+  { id: "sun", icon: "🏝️", label: "Winter Sun", kind: "sun", view: { lat: 5, lon: 30, spanLat: 120 } },
+  { id: "americas", icon: "🌎", label: "North America", box: [-130.0, 18.0, -52.0, 58.5], view: { lat: 39.0, lon: -95.5, spanLat: 34 } },
+];
+// Which continent each parkrun country or territory sits in (for the "All within Europe" style filter).
+const CONTINENTS = {
+  eu: { name: "Europe", icon: "🌍", ccs: [4, 23, 30, 32, 42, 44, 54, 64, 67, 74, 88, 97, 101, 102, 103, 104] },
+  na: { name: "North America", icon: "🌎", ccs: [14, 98, 106] },
+  sa: { name: "South America", icon: "🌎", ccs: [105] },
+  af: { name: "Africa", icon: "🌍", ccs: [85, 107, 108, 109] },
+  as: { name: "Asia", icon: "🌏", ccs: [46, 57, 82] },
+  oc: { name: "Oceania", icon: "🌏", ccs: [3, 65] },
+};
+function continentOf(cc) {
+  for (const [id, c] of Object.entries(CONTINENTS)) if (c.ccs.includes(cc)) return { id, ...c };
+  return null;
+}
+// The area in force: one chosen on the map, or the continent you're starting from ("home": travel still counts).
+function activeRegion() {
+  if (prefs.region) return prefs.region;
+  if (prefs.country === "cont") {
+    const c = continentOf(originCC());
+    if (c) return { id: "cont-" + c.id, label: c.name, ccs: c.ccs, home: true };
+  }
+  return null;
+}
+function pointInPoly(lon, lat, poly) {
+  const x = poly[0][0] + ((((lon - poly[0][0] + 180) % 360) + 360) % 360) - 180; // same side of the date line as the shape
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+    if ((yi > lat) !== (yj > lat) && x < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function inRegion(ev, reg) {
+  if (!reg) return true;
+  if (Array.isArray(reg.ccs) && !reg.ccs.includes(ev.cc)) return false;
+  if (Array.isArray(reg.exclCC) && reg.exclCC.includes(ev.cc)) return false;
+  if (reg.kind === "sun") {
+    const inMed = ev.lat >= 35 && ev.lat <= 44.5 && ev.lon >= -11 && ev.lon <= 22;
+    const inWarmUS = ev.cc === 98 && ev.lat <= 34.5;
+    const inWarmCC = [3, 57, 65, 82, 85, 106, 107, 108, 109].includes(ev.cc);
+    return inMed || inWarmUS || inWarmCC;
+  }
+  if (Array.isArray(reg.poly) && reg.poly.length >= 3) return pointInPoly(ev.lon, ev.lat, reg.poly);
+  if (Array.isArray(reg.box) && reg.box.length === 4) {
+    const [x0, y0, x1, y1] = reg.box;
+    if (ev.lat < y0 || ev.lat > y1) return false;
+    return x0 <= x1 ? (ev.lon >= x0 && ev.lon <= x1) : (ev.lon >= x0 || ev.lon <= x1);
+  }
+  return true;
+}
+function modeHint(m, cc = null, reg = null) {
+  if (reg && !reg.home) return `in ${reg.label || "selected map area"}`;
   if (!m) return "";
   if (m.id === "local") return isMi() ? "within 19 mi" : "within 30 km";
   if (m.id === "day") return isMi() ? "within 70 mi" : "within 110 km";
   if (m.id === "away") return isMi() ? "within 310 mi" : "within 500 km";
-  return cc && COUNTRIES[cc] ? `anywhere in ${COUNTRIES[cc].name}` : "anywhere in the world";
+  if (cc && COUNTRIES[cc]) return `anywhere in ${COUNTRIES[cc].name}`;
+  return reg && reg.home ? `anywhere in ${reg.label}` : "anywhere in the world";
 }
 function originCC() {
   if (origin && origin.cc && COUNTRIES[origin.cc]) return origin.cc;
@@ -1221,25 +1355,33 @@ function effectiveCC() {
   const n = Number(prefs.country);
   return n && COUNTRIES[n] ? n : null;
 }
+function isDestFilter(allowedCC, regFilter = activeRegion()) {
+  return Boolean((regFilter && !regFilter.home) || (allowedCC && allowedCC !== originCC()));
+}
 // One runner's points for every parkrun that would move a challenge forward.
-function scoreRunner(s, ctx, origin, exclude, allowedCC = null) {
+function scoreRunner(s, ctx, origin, exclude, allowedCC = null, regFilter = null, useRarityScarcity = false) {
   const focusSet = new Set(Array.isArray(prefs.focus) ? prefs.focus : []);
+  const rarityMode = useRarityScarcity || isDestFilter(allowedCC, regFilter);
   const rows = [];
+  const oPt = origin || { lat: 51.5, lon: -0.1 };
   for (const ev of EVENTS) {
     if (exclude.has(ev.slug)) continue;
     if (allowedCC && ev.cc !== allowedCC) continue;
+    if (regFilter && !inRegion(ev, regFilter)) continue;
     const gains = gainsFor(s, ev, ctx);
     if (!gains.length) continue;
-    rows.push({ ev, gains, d: km(origin, ev) });
+    rows.push({ ev, gains, d: km(oPt, ev) });
   }
-  // scarcity: is this the closest place to collect a letter, word or flag you still need?
   const providers = new Map();
   for (const r of rows) for (const g of r.gains) if (g.token) {
     const list = providers.get(g.token) || [];
     if (list[list.length - 1] !== r) list.push(r);
     providers.set(g.token, list);
   }
-  for (const list of providers.values()) list.sort((a, b) => a.d - b.d);
+  if (!rarityMode) {
+    for (const list of providers.values()) list.sort((a, b) => a.d - b.d);
+  }
+  const whereLabel = allowedCC && COUNTRIES[allowedCC] ? COUNTRIES[allowedCC].name : regFilter ? "area" : "";
   for (const r of rows) {
     r.bonus = 0;
     r.gains = r.gains.map((g) => {
@@ -1255,44 +1397,73 @@ function scoreRunner(s, ctx, origin, exclude, allowedCC = null) {
       if (!g.token || seen.has(g.token)) continue;
       seen.add(g.token);
       const list = providers.get(g.token);
-      const alt = list[0] === r ? list[1] : list[0];
-      const dAlt = alt ? alt.d : r.d + 300;
-      if (list[0] === r) g.nearest = alt ? alt.d : null;
-      const b = Math.max(0, Math.min(18, (dAlt - r.d) / 15)) * (g.focused ? 1.8 : 1);
-      g.bonus = b;
-      r.bonus += b;
+      if (rarityMode) {
+        // Unbiased rarity bonus (never skews overseas trips toward whichever coast is closest to home)
+        if (g.id !== "flags" && list.length <= 3) {
+          const rawB = list.length === 1 ? 14 : list.length === 2 ? 8 : 4;
+          const b = rawB * (g.focused ? 1.6 : 1);
+          g.bonus = b;
+          r.bonus += b;
+          if (whereLabel) g.destNote = list.length === 1 ? `only one in ${whereLabel}` : `1 of ${list.length} in ${whereLabel}`;
+        }
+      } else {
+        const alt = list[0] === r ? list[1] : list[0];
+        const dAlt = alt ? alt.d : r.d + 300;
+        if (list[0] === r) g.nearest = alt ? alt.d : null;
+        const b = Math.max(0, Math.min(18, (dAlt - r.d) / 15)) * (g.focused ? 1.8 : 1);
+        g.bonus = b;
+        r.bonus += b;
+      }
     }
     r.points = r.gains.reduce((a, g) => a + g.pts, 0) + r.bonus;
   }
   return rows;
 }
+let hubCache = null;
+function hubDensity(ev) {
+  if (!hubCache) {
+    hubCache = new Map();
+    for (const a of EVENTS) {
+      let n = 0;
+      for (const b of EVENTS) {
+        if (a !== b && Math.abs(a.lat - b.lat) < 0.7 && Math.abs(a.lon - b.lon) < 1.0 && km(a, b) <= 65) n++;
+      }
+      hubCache.set(a.slug, n);
+    }
+  }
+  return hubCache.get(ev.slug) || 0;
+}
 // members: [{ name, ctx, s }]. Points add up across everyone running; travel counts once.
-function rank(members, origin, mode, exclude = new Set(), allowedCC = effectiveCC()) {
+function rank(members, origin, mode, exclude = new Set(), allowedCC = effectiveCC(), regFilter = activeRegion()) {
+  const dest = isDestFilter(allowedCC, regFilter);
+  const maxD = dest ? Infinity : mode.max;
   const by = new Map();
   for (const m of members) {
-    for (const r of scoreRunner(m.s, m.ctx, origin, exclude, allowedCC)) {
-      if (r.d > mode.max) continue;
+    for (const r of scoreRunner(m.s, m.ctx, origin, exclude, allowedCC, regFilter, dest)) {
+      if (r.d > maxD) continue;
       let row = by.get(r.ev.slug);
-      if (!row) by.set(r.ev.slug, (row = { ev: r.ev, d: r.d, per: [], points: 0 }));
+      if (!row) by.set(r.ev.slug, (row = { ev: r.ev, d: r.d, per: [], points: 0, isDest: dest }));
       row.per.push({ m, gains: r.gains, points: r.points });
       row.points += r.points;
     }
   }
   const rows = [...by.values()];
-  const perKm = mode.id === "any" && allowedCC ? 0.018 : mode.per;
+  // Foreign country or selected map region: zero Atlantic distance penalty; break exact point ties by nearby parkrun hub density!
+  const perKm = dest ? 0 : mode.id === "any" && allowedCC ? 0.018 : mode.id === "any" && regFilter && regFilter.home ? 0.01 : mode.per;
   for (const r of rows) {
     r.gains = r.per.flatMap((p) => p.gains);
     r.travel = r.d * perKm;
-    r.score = r.points - r.travel;
+    r.score = dest ? r.points : r.points - r.travel;
+    r.tieScore = dest ? r.points + Math.min(8, hubDensity(r.ev)) * 0.08 : r.points - r.travel;
     r.completes = r.gains.filter((g) => g.done).length;
   }
-  return rows.sort((a, b) => b.score - a.score || a.d - b.d);
+  return rows.sort((a, b) => b.tieScore - a.tieScore || (dest ? a.ev.name.localeCompare(b.ev.name) : a.d - b.d));
 }
-function plan(members, origin, mode, weeks = 5, allowedCC = effectiveCC()) {
+function plan(members, origin, mode, weeks = 5, allowedCC = effectiveCC(), regFilter = activeRegion()) {
   const ms = members.map((m) => ({ ...m, s: cloneState(m.s) }));
   const picked = [], ex = new Set(prefs.hidden);
   for (let w = 0; w < weeks; w++) {
-    const top = rank(ms, origin, mode, ex, allowedCC)[0];
+    const top = rank(ms, origin, mode, ex, allowedCC, regFilter)[0];
     if (!top) break;
     picked.push(top);
     ex.add(top.ev.slug);
@@ -1300,6 +1471,84 @@ function plan(members, origin, mode, weeks = 5, allowedCC = effectiveCC()) {
     ms.forEach((m) => addVisit(m.s, top.ev, top.ev.name));
   }
   return picked;
+}
+
+const countryRankCache = new Map();
+function rankCountriesFor(msList, orig) {
+  const oKey = orig ? `${Math.round(orig.lat * 10)},${Math.round(orig.lon * 10)}` : "none";
+  const key = [
+    msList.map((m) => `${m.id}:${m.s.visited.size}:${m.r ? m.r.runs.length : 0}`).join(","),
+    oKey,
+    prefs.focus.join(","),
+    prefs.record ? 1 : 0,
+    prefs.hidden.join(","),
+  ].join("|");
+  if (countryRankCache.has(key)) return countryRankCache.get(key);
+
+  const hiddenSet = new Set(prefs.hidden);
+  const bySlug = new Map();
+  const oPt = orig || { lat: 51.5, lon: -0.1 };
+  for (const m of msList) {
+    for (const r of scoreRunner(m.s, m.ctx, oPt, hiddenSet, null, null, true)) {
+      let row = bySlug.get(r.ev.slug);
+      if (!row) bySlug.set(r.ev.slug, (row = { ev: r.ev, points: 0, gains: [], per: [] }));
+      row.per.push({ m, gains: r.gains, points: r.points });
+      row.points += r.points;
+      for (const g of r.gains) row.gains.push(g);
+    }
+  }
+  for (const row of bySlug.values()) {
+    const nonMinor = row.gains.filter((g) => !g.minor);
+    row.ticks = nonMinor.length || row.gains.length;
+    row.completes = row.gains.filter((g) => g.done).length;
+  }
+
+  const all = Object.keys(COUNTRIES).map(Number).map((cc) => {
+    const c = COUNTRIES[cc];
+    const visited = msList.every((m) => m.s.cc.has(cc));
+    let best = null, count = 0, unvisitedCount = 0, minDist = Infinity;
+    const uniqueTokens = new Set();
+    for (const ev of EVENTS) {
+      if (ev.cc !== cc) continue;
+      count++;
+      const d = orig ? km(orig, ev) : 0;
+      if (d < minDist) minDist = d;
+      if (!msList.every((m) => m.s.slugs.has(ev.slug))) unvisitedCount++;
+      const sc = bySlug.get(ev.slug);
+      if (sc) {
+        if (!best || sc.points > best.points || (sc.points === best.points && hubDensity(ev) > hubDensity(best.ev))) best = sc;
+        for (const g of sc.gains) if (!g.minor && g.token) uniqueTokens.add(g.token);
+      }
+    }
+    if (!Number.isFinite(minDist)) minDist = 0;
+    const recScore = best ? best.points : -1e9;
+    return {
+      cc,
+      iso: c.iso,
+      name: c.name,
+      count,
+      visited,
+      unvisitedCount,
+      best,
+      bestPts: best ? Math.round(best.points) : 0,
+      bestTicks: best ? best.ticks : 0,
+      uniqueChecks: uniqueTokens.size,
+      minDist,
+      recScore,
+    };
+  });
+
+  // Order by maximum challenges to check off, then highest challenge points, breaking ties by closest weekend trip!
+  const sortFn = (a, b) => b.bestTicks - a.bestTicks || b.bestPts - a.bestPts || a.minDist - b.minDist;
+  const unvis = all.filter((x) => !x.visited).sort(sortFn);
+  unvis.forEach((x, i) => { x.recRank = i + 1; });
+  const vis = all.filter((x) => x.visited).sort(sortFn);
+  vis.forEach((x) => { x.recRank = 0; });
+
+  const out = { bySlug, countries: [...unvis, ...vis], unvis, vis, byCC: new Map(all.map((x) => [x.cc, x])) };
+  if (countryRankCache.size > 6) countryRankCache.clear();
+  countryRankCache.set(key, out);
+  return out;
 }
 
 /* ---------- challenge board ---------- */
@@ -1480,8 +1729,9 @@ function board(ctx) {
 let saved = store.get("nbp.runners", {});
 const rawPrefs = store.get("nbp.prefs", {});
 const defaultUnit = rawPrefs.unit || (typeof navigator !== "undefined" && /^en-US\b/i.test(navigator.language || "") ? "mi" : "km");
-let prefs = { mode: "local", view: "top", hidden: [], group: [], record: false, country: "", focus: [], unit: defaultUnit, ...rawPrefs };
+let prefs = { mode: "local", view: "top", hidden: [], group: [], record: false, country: "", focus: [], region: null, unit: defaultUnit, ...rawPrefs };
 if (!Array.isArray(prefs.focus)) prefs.focus = [];
+if (prefs.region && typeof prefs.region !== "object") prefs.region = null;
 const savePrefs = () => store.set("nbp.prefs", prefs);
 let current = null;   // { id, name, runs, example? }
 let ctx = null;
@@ -1795,7 +2045,7 @@ function gainHtml(g, memberId = "") {
   const what = g.id === "flags" ? g.what.split(" ").slice(1).join(" ") : g.what;
   const m = /(\d+)\/(\d+)/.exec(g.meta);
   const metaHtml = esc(g.meta).replace(/(\d+)\/(\d+)/, '<span data-count="$1">$1</span>/<span data-count="$2">$2</span>');
-  const near = g.nearest !== undefined ? ` · nearest${g.nearest ? `, next ${fmtKm(g.nearest)}` : ""}` : "";
+  const near = g.destNote ? ` · ${esc(g.destNote)}` : g.nearest !== undefined ? ` · nearest${g.nearest ? `, next ${fmtKm(g.nearest)}` : ""}` : "";
   return `<div class="gtile ${g.done ? "done" : ""} ${g.minor ? "minor" : ""} ${g.focused ? "focused" : ""}" style="--gc:${st.c}" data-gid="${g.id}"${g.alphaNum ? ` data-alpha="${g.alphaNum}"` : ""}${memberId ? ` data-mid="${esc(memberId)}"` : ""} role="button" tabindex="0" title="Click to jump to ${esc(name)} on the Challenge Board">
     ${g.done ? '<span class="gribbon">★ Completes!</span>' : ""}
     <span class="gicon ${iconCls}" aria-hidden="true">${icon}</span>
@@ -1820,6 +2070,9 @@ function cardHtml(r, i, isPlan, group) {
   const gainsBlock = group
     ? group.map((m) => { const p = r.per.find((x) => x.m.id === m.id); return `<div class="who"><span class="who-name">${esc(m.name)}</span><div class="gains">${p ? sortGains(p.gains).map((g) => gainHtml(g, m.id)).join("") : `<span class="nothing">Already run here: no new challenges</span>`}</div></div>`; }).join("")
     : `<div class="gains">${sortGains(r.gains).map((g) => gainHtml(g)).join("")}</div>`;
+  const ptsExplain = r.isDest
+    ? `<span data-count="${Math.round(r.points)}">${Math.round(r.points)}</span> challenge pts (ranked by best haul).`
+    : `<span data-count="${Math.round(r.points)}">${Math.round(r.points)}</span> challenge pts − <span data-count="${Math.round(r.travel)}">${Math.round(r.travel)}</span> travel.`;
   return `<article class="pick ${i === selPick ? "sel" : ""}" data-i="${i}">
     <button class="token" type="button" aria-pressed="${i === selPick}" aria-label="Show ${esc(r.ev.name)} on the map">${isPlan ? "<small>Week</small>" : ""}<b>${i + 1}</b></button>
     <div class="pick-main">
@@ -1828,7 +2081,7 @@ function cardHtml(r, i, isPlan, group) {
     </div>
     <div class="score"><b class="num" data-count="${Math.round(r.score)}">${Math.round(r.score)}</b><span>points</span></div>
     ${gainsBlock}
-    <div class="pick-foot"><span>${summary}. <span data-count="${Math.round(r.points)}">${Math.round(r.points)}</span> challenge pts − <span data-count="${Math.round(r.travel)}">${Math.round(r.travel)}</span> travel.</span>
+    <div class="pick-foot"><span>${summary}. ${ptsExplain}</span>
       <span class="acts"><a href="https://${c.url}/${r.ev.slug}/" target="_blank" rel="noopener">Course page ↗</a><a href="https://${c.url}/${r.ev.slug}/news/" target="_blank" rel="noopener" title="Check course news and cancellations">News ↗</a><a href="https://www.google.com/maps/dir/?api=1&destination=${r.ev.lat},${r.ev.lon}" target="_blank" rel="noopener">Directions ↗</a><button class="linkbtn" data-hide="${esc(r.ev.slug)}">Not this one</button></span></div>
   </article>`;
 }
@@ -1955,13 +2208,46 @@ function seeded(n) {
   let t = (n >>> 0) + 0x6d2b79f5;
   return () => { t = (t + 0x6d2b79f5) >>> 0; let r = Math.imul(t ^ (t >>> 15), 1 | t); r ^= r + Math.imul(r ^ (r >>> 7), 61 | r); return ((r ^ (r >>> 14)) >>> 0) / 4294967296; };
 }
-function radarHtml(rows, allowedCC = null) {
+const EXP_LEGEND_NOTE = "Gold dots are your highest-scoring parkruns. Move the map and press 'Search this area', or use 'Draw area' to outline exactly where you're going.";
+function computeDestFrame(rows, allowedCC, regFilter) {
+  let pts = rows.map((r) => r.ev);
+  if (pts.length <= 1) {
+    const extra = EVENTS.filter((e) => (!allowedCC || e.cc === allowedCC) && (!regFilter || inRegion(e, regFilter)));
+    if (extra.length > pts.length) pts = extra;
+  }
+  if (!pts.length) return { center: origin, maxKm: 200 };
+  let vx = 0, vy = 0, vz = 0;
+  const t = Math.PI / 180;
+  for (const p of pts) {
+    const la = p.lat * t, lo = p.lon * t;
+    vx += Math.cos(la) * Math.cos(lo);
+    vy += Math.cos(la) * Math.sin(lo);
+    vz += Math.sin(la);
+  }
+  const hyp = Math.hypot(vx, vy);
+  const cLat = hyp < 1e-6 && Math.abs(vz) < 1e-6 ? pts[0].lat : Math.atan2(vz, hyp) / t;
+  const cLon = hyp < 1e-6 ? pts[0].lon : Math.atan2(vy, vx) / t;
+  const center = { lat: cLat, lon: cLon, label: origin ? origin.label : "Start" };
+  const far = Math.max(...pts.map((p) => km(center, p)));
+  return { center, maxKm: Math.max(65, far * 1.28) };
+}
+
+function radarHtml(rows, allowedCC = null, regFilter = activeRegion()) {
   const W = 360, C = W / 2, R = 160;
   const mode = effMode || MODES.find((m) => m.id === prefs.mode);
-  const far = rows.length ? Math.max(...rows.map((r) => r.d)) : 10;
-  const maxKm = Math.max(5, mode.max === Infinity ? far * 1.12 : Math.min(mode.max, Math.max(far * 1.15, 15)));
+  const dest = isDestFilter(allowedCC, regFilter);
+  let viewOrigin = origin, maxKm = 15;
+  if (dest) {
+    const fr = computeDestFrame(rows, allowedCC, regFilter);
+    viewOrigin = fr.center;
+    maxKm = fr.maxKm;
+  } else {
+    const far = rows.length ? Math.max(...rows.map((r) => r.d)) : 10;
+    maxKm = Math.max(5, mode.max === Infinity ? far * 1.12 : Math.min(mode.max, Math.max(far * 1.15, 15)));
+  }
   radarHtml.maxKm = maxKm;
-  const proj = projector(origin, maxKm, C, R);
+  radarHtml.viewOrigin = viewOrigin;
+  const proj = projector(viewOrigin, maxKm, C, R);
   const pos = (ev) => {
     const [x, y, r] = proj(ev.lat, ev.lon);
     const k = r > R ? R / r : 1;
@@ -1973,24 +2259,30 @@ function radarHtml(rows, allowedCC = null) {
   const ms = members();
 
   // land, sea and territory cells depend only on the view, so keep them between clicks
-  const key = [origin.lat, origin.lon, maxKm, allowedCC || 0, ms.map((m) => m.id + ":" + m.s.visited.size).join(",")].join("|");
+  const regKey = regFilter ? (regFilter.id || "") + JSON.stringify(regFilter.poly || regFilter.box || "") : "";
+  const key = [viewOrigin.lat.toFixed(3), viewOrigin.lon.toFixed(3), maxKm.toFixed(1), allowedCC || 0, regKey, ms.map((m) => m.id + ":" + m.s.visited.size).join(",")].join("|");
   let base = baseCache.get(key);
   if (!base) {
-    const map = mapLayer(origin, maxKm, C, R);
+    const map = mapLayer(viewOrigin, maxKm, C, R);
     const sites = [];
     for (const ev of EVENTS) {
       if (allowedCC && ev.cc !== allowedCC) continue;
+      if (regFilter && !inRegion(ev, regFilter)) continue;
       const [x, y, r] = proj(ev.lat, ev.lon);
       if (r <= R * 1.35) sites.push({ ev, x, y, r });
     }
-    const cells = sites.length <= 1400 ? voronoi(sites, [C - R - 30, C - R - 30, C + R + 30, C + R + 30]) : null;
+    const cells = sites.length <= 1400 && sites.length >= 2 ? voronoi(sites, [C - R - 30, C - R - 30, C + R + 30, C + R + 30]) : null;
     base = { map, sites, cells };
     baseCache.clear();
     baseCache.set(key, base);
   }
   const { map, sites, cells } = base;
-  document.querySelectorAll("#radar-legend [data-vor]").forEach((el) => { el.hidden = !cells; });
-  if ($("#radar-legend-note")) $("#radar-legend-note").hidden = !cells;
+  document.querySelectorAll("#radar-legend [data-vor]").forEach((el) => { el.hidden = mapExpanded || !cells; });
+  document.querySelectorAll("#radar-legend [data-exp-leg]").forEach((el) => { el.hidden = !mapExpanded; });
+  if ($("#radar-legend-note")) {
+    $("#radar-legend-note").hidden = !mapExpanded && !cells;
+    $("#radar-legend-note").textContent = mapExpanded ? EXP_LEGEND_NOTE : "Each patch is the area closest to one parkrun.";
+  }
 
   let done = "", partDone = "", todo = "", pickCells = "", selCell = "", dots = "";
   sites.forEach((s, i) => {
@@ -2025,25 +2317,43 @@ function radarHtml(rows, allowedCC = null) {
     : cellLayer;
 
   let rings = "";
-  const taken = [[C - 40, C + 10, C + 40, C + 26], [C - 14, 0, C + 14, 30]];
-  const diag = Math.SQRT1_2;
-  const maxUnit = isMi() ? maxKm * KM_TO_MI : maxKm;
-  const unitSteps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000, 20000];
-  const stepU = unitSteps.find((s) => maxUnit / s <= 4) || 20000;
-  for (let u = stepU; u <= maxUnit + 1e-9; u += stepU) {
-    const k = isMi() ? u / KM_TO_MI : u;
-    const rr = (k / maxKm) * R, label = `${u.toLocaleString()} ${isMi() ? "mi" : "km"}`, w = label.length * 5.6 + 10;
-    const lx = C + rr * diag, ly = C - rr * diag;
-    rings += `<circle cx="${C}" cy="${C}" r="${rr.toFixed(1)}" fill="none" stroke="var(--ring)" stroke-width="1.3" stroke-dasharray="3 4"/>`
-      + `<rect x="${(lx - w / 2).toFixed(1)}" y="${(ly - 7).toFixed(1)}" width="${w.toFixed(1)}" height="14" rx="7" fill="#ffffff" fill-opacity=".92"/>`
-      + `<text x="${lx.toFixed(1)}" y="${(ly + 3.5).toFixed(1)}" text-anchor="middle" class="ringlabel">${label}</text>`;
-    taken.push([lx - w / 2 - 2, ly - 9, lx + w / 2 + 2, ly + 9]);
+  const taken = [[C - 14, 0, C + 14, 30]];
+  if (!dest) taken.push([C - 40, C + 10, C + 40, C + 26]);
+  if (!dest) {
+    const diag = Math.SQRT1_2;
+    const maxUnit = isMi() ? maxKm * KM_TO_MI : maxKm;
+    const unitSteps = [1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 5000, 10000, 20000];
+    const stepU = unitSteps.find((s) => maxUnit / s <= 4) || 20000;
+    for (let u = stepU; u <= maxUnit + 1e-9; u += stepU) {
+      const k = isMi() ? u / KM_TO_MI : u;
+      const rr = (k / maxKm) * R, label = `${u.toLocaleString()} ${isMi() ? "mi" : "km"}`, w = label.length * 5.6 + 10;
+      const lx = C + rr * diag, ly = C - rr * diag;
+      rings += `<circle cx="${C}" cy="${C}" r="${rr.toFixed(1)}" fill="none" stroke="var(--ring)" stroke-width="1.3" stroke-dasharray="3 4"/>`
+        + `<rect x="${(lx - w / 2).toFixed(1)}" y="${(ly - 7).toFixed(1)}" width="${w.toFixed(1)}" height="14" rx="7" fill="#ffffff" fill-opacity=".92"/>`
+        + `<text x="${lx.toFixed(1)}" y="${(ly + 3.5).toFixed(1)}" text-anchor="middle" class="ringlabel">${label}</text>`;
+      taken.push([lx - w / 2 - 2, ly - 9, lx + w / 2 + 2, ly + 9]);
+    }
+  } else {
+    rings = `<circle cx="${C}" cy="${C}" r="${(R * 0.55).toFixed(1)}" fill="none" stroke="var(--ring)" stroke-opacity=".55" stroke-width="1.1" stroke-dasharray="3 5"/>`;
   }
+
+  let home = "";
+  if (!dest) {
+    home = `<circle cx="${C}" cy="${C}" r="11" fill="var(--sky)" opacity=".18"/><circle cx="${C}" cy="${C}" r="6" fill="var(--sky)" stroke="#ffffff" stroke-width="2.5"/><text x="${C}" y="${C + 22}" text-anchor="middle" class="here">${esc(origin.label.replace(/ parkrun$/, ""))}</text>`;
+  } else if (origin) {
+    const [ox, oy, orad] = proj(origin.lat, origin.lon);
+    if (orad <= R * 0.92) {
+      taken.push([ox - 36, oy + 6, ox + 36, oy + 24]);
+      home = `<circle cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="9" fill="var(--sky)" opacity=".18"/><circle cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" r="5" fill="var(--sky)" stroke="#ffffff" stroke-width="2"/><text x="${ox.toFixed(1)}" y="${(oy + 18).toFixed(1)}" text-anchor="middle" class="here">${esc(origin.label.replace(/ parkrun$/, ""))}</text>`;
+    }
+  }
+
   let picks = "";
   if (prefs.view === "plan" && rows.length) {
-    // the 5-week route, drawn like a dotted course line
-    const pts = [[C, C], ...rows.map((r) => pos(r.ev))];
-    picks += `<polyline points="${pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ")}" fill="none" stroke="var(--grass-deep)" stroke-width="2.6" stroke-dasharray=".1 6" stroke-linecap="round"/>`;
+    const pts = dest ? rows.map((r) => pos(r.ev)) : [[C, C], ...rows.map((r) => pos(r.ev))];
+    if (pts.length > 1) {
+      picks += `<polyline points="${pts.map((p) => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ")}" fill="none" stroke="var(--grass-deep)" stroke-width="2.6" stroke-dasharray=".1 6" stroke-linecap="round"/>`;
+    }
   }
   rows.forEach((r, i) => {
     if (i === sel) return;
@@ -2059,10 +2369,10 @@ function radarHtml(rows, allowedCC = null) {
     picks += `<g class="rtok" data-i="${sel}"><ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="9" ry="3.5" fill="#000000" opacity=".15"/>${pinSvg(+x.toFixed(1), +y.toFixed(1), 1.4, "var(--gold)", "#3a2a00", sel + 1)}`
       + `<rect x="${(lx - w / 2).toFixed(1)}" y="${(ly - 12).toFixed(1)}" width="${w.toFixed(1)}" height="17" rx="8.5" fill="#ffffff" stroke="#f2c14e"/><text x="${lx.toFixed(1)}" y="${(ly + 0.5).toFixed(1)}" class="picklabel">${esc(r.ev.name)}</text></g>`;
   }
-  const towns = townLabels(origin, maxKm, C, R, taken);
-  const space = (mode.id === "any" && !allowedCC) || maxKm > 2500;
+  const towns = townLabels(viewOrigin, maxKm, C, R, taken);
+  const space = (!dest && mode.id === "any" && !allowedCC) || maxKm > 3400;
   radarHtml.space = space;
-  const rnd = seeded(Math.round(origin.lat * 1000) * 7 + Math.round(origin.lon * 1000));
+  const rnd = seeded(Math.round(viewOrigin.lat * 1000) * 7 + Math.round(viewOrigin.lon * 1000));
   let trees = "";
   if (maxKm <= 45) {
     for (let t = 0; t < 14; t++) {
@@ -2089,7 +2399,6 @@ function radarHtml(rows, allowedCC = null) {
       clouds += `<g class="cloud" style="animation-duration:${dur}s;animation-delay:-${(rnd() * 10).toFixed(1)}s"><g transform="translate(${x.toFixed(0)} ${y.toFixed(0)}) scale(${sc.toFixed(2)})"><ellipse cx="0" cy="4" rx="20" ry="7" fill="#ffffff" opacity=".9"/><circle cx="-7" cy="0" r="7" fill="#ffffff" opacity=".92"/><circle cx="5" cy="-3" r="9" fill="#ffffff" opacity=".95"/></g></g>`;
     }
   }
-  // little birds flapping across the close-up map now and then
   let birds = "";
   if (maxKm <= 45) {
     for (let b = 0; b < 3; b++) {
@@ -2098,7 +2407,6 @@ function radarHtml(rows, allowedCC = null) {
     }
     birds = `<g class="birds">${birds}</g>`;
   }
-  // a comet and a tiny satellite circling the floating globe every so often
   let orbits = "";
   if (space) {
     orbits = `<defs><linearGradient id="tail-g" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#fff6d0" stop-opacity=".95"/></linearGradient></defs>`
@@ -2119,8 +2427,7 @@ function radarHtml(rows, allowedCC = null) {
     sky = `<defs><radialGradient id="space-g" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#2b3f78"/><stop offset="1" stop-color="#141d3d"/></radialGradient><radialGradient id="glow-g"><stop offset=".86" stop-color="#9fd8ff" stop-opacity=".45"/><stop offset="1" stop-color="#9fd8ff" stop-opacity="0"/></radialGradient></defs>`
       + `<g class="sky"><rect width="${W}" height="${W}" rx="18" fill="url(#space-g)"/>${stars}<circle cx="${C}" cy="${C}" r="${R + 16}" fill="url(#glow-g)"/></g>`;
   }
-  const home = `<circle cx="${C}" cy="${C}" r="11" fill="var(--sky)" opacity=".18"/><circle cx="${C}" cy="${C}" r="6" fill="var(--sky)" stroke="#ffffff" stroke-width="2.5"/><text x="${C}" y="${C + 22}" text-anchor="middle" class="here">${esc(origin.label.replace(/ parkrun$/, ""))}</text>`;
-  return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="Map of the picks by distance and direction from ${esc(origin.label)}">
+  return `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="Map of the picks">
     <defs><clipPath id="radar-clip"><circle cx="${C}" cy="${C}" r="${R}"/></clipPath>${map.land ? `<clipPath id="land-clip"><path d="${map.land}"/></clipPath>` : ""}</defs>
     ${sky}<circle cx="${C}" cy="${C}" r="${R}" fill="var(--sea)"/>
     <g clip-path="url(#radar-clip)"><g class="zoom">${ground}${trees}${dots}</g>${clouds}${birds}</g>${nearClouds}${orbits}
@@ -2128,19 +2435,34 @@ function radarHtml(rows, allowedCC = null) {
     <g class="overlay">${rings}<path d="M${C} 4l5 9h-10z" fill="${space ? "#ffffff" : "var(--grass-deep)"}"/><text x="${C}" y="24" text-anchor="middle" class="ringlabel" font-weight="800"${space ? ' style="fill:#ffffff"' : ""}>N</text>${towns}${home}${picks}</g></svg>`;
 }
 
-let effMode = null, effAllowedCC = null;
+let effMode = null, effAllowedCC = null, mapExpanded = false;
 function renderExtras() {
   const cf = $("#country-filter");
   if (cf) {
     const oCC = originCC(), oC = COUNTRIES[oCC] || COUNTRIES[97];
-    const sortedCC = Object.keys(COUNTRIES).map(Number).sort((a, b) => COUNTRIES[a].name.localeCompare(COUNTRIES[b].name));
-    const countByCC = {};
-    EVENTS.forEach((e) => { countByCC[e.cc] = (countByCC[e.cc] || 0) + 1; });
-    cf.innerHTML = `<option value="">🌍 All countries</option>`
-      + `<option value="same">${flag(oC.iso)} Stay in ${esc(oC.name)}</option>`
-      + `<optgroup label="Specific country or territory">`
-      + sortedCC.map((cc) => `<option value="${cc}">${flag(COUNTRIES[cc].iso)} ${esc(COUNTRIES[cc].name)} (${countByCC[cc] || 0})</option>`).join("")
-      + `</optgroup>`;
+    const cr = current ? rankCountriesFor(members(), origin || ctx?.home) : null;
+    const cont = continentOf(oCC);
+    const contOpt = cont ? `<option value="cont">${cont.icon} All within ${esc(cont.name)}</option>` : "";
+    if (cr) {
+      const fmtOpt = (x) => {
+        const prefix = x.recRank ? `#${x.recRank} ` : "✓ ";
+        const stat = x.best
+          ? `ticks off ${x.bestTicks} (${x.bestPts} pts)`
+          : `${x.count} run`;
+        return `<option value="${x.cc}">${prefix}${flag(x.iso)} ${esc(x.name)} · ${stat}</option>`;
+      };
+      cf.innerHTML = `<option value="">🌐 All countries</option>`
+        + contOpt
+        + `<option value="same">${flag(oC.iso)} Stay in ${esc(oC.name)}</option>`
+        + (cr.unvis.length ? `<optgroup label="Recommended next countries (best haul)">${cr.unvis.map(fmtOpt).join("")}</optgroup>` : "")
+        + (cr.vis.length ? `<optgroup label="Countries already visited">${cr.vis.map(fmtOpt).join("")}</optgroup>` : "");
+    } else {
+      const sortedCC = Object.keys(COUNTRIES).map(Number).sort((a, b) => COUNTRIES[a].name.localeCompare(COUNTRIES[b].name));
+      cf.innerHTML = `<option value="">🌐 All countries</option>`
+        + contOpt
+        + `<option value="same">${flag(oC.iso)} Stay in ${esc(oC.name)}</option>`
+        + `<optgroup label="Country or territory">${sortedCC.map((cc) => `<option value="${cc}">${flag(COUNTRIES[cc].iso)} ${esc(COUNTRIES[cc].name)}</option>`).join("")}</optgroup>`;
+    }
     cf.value = prefs.country || "";
     $("#country-pill")?.classList.toggle("active", !!prefs.country);
   }
@@ -2157,9 +2479,23 @@ function renderExtras() {
   }
   const chips = $("#focus-chips");
   if (chips) {
-    chips.innerHTML = prefs.focus.map((gid) => `<button type="button" class="focus-chip" data-unfocus="${esc(gid)}" title="Stop prioritising ${esc(GAIN_NAMES[gid] || gid)}">★ ${esc(GAIN_NAMES[gid] || gid)} <span aria-hidden="true">×</span></button>`).join("");
+    const regChip = prefs.region
+      ? `<button type="button" class="focus-chip region-chip" data-clear-region="1" title="Clear selected map area">📍 ${esc(prefs.region.label || "Selected map area")} <span aria-hidden="true">×</span></button>`
+      : "";
+    chips.innerHTML = regChip + prefs.focus.map((gid) => `<button type="button" class="focus-chip" data-unfocus="${esc(gid)}" title="Stop prioritising ${esc(GAIN_NAMES[gid] || gid)}">★ ${esc(GAIN_NAMES[gid] || gid)} <span aria-hidden="true">×</span></button>`).join("");
   }
   document.querySelectorAll("#unit-seg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.unit === prefs.unit)));
+  updateMapExpandBtn();
+}
+
+function updateMapExpandBtn() {
+  const btn = $("#map-expand-btn");
+  if (!btn) return;
+  btn.setAttribute("aria-expanded", String(mapExpanded));
+  btn.classList.toggle("has-region", !mapExpanded && !!prefs.region);
+  if (mapExpanded) btn.textContent = "⤡ Compact map";
+  else if (prefs.region) btn.textContent = `📍 ${prefs.region.label || "Selected area"} · Edit ⤢`;
+  else btn.textContent = "⤢ Select area on map";
 }
 
 function renderPicks() {
@@ -2186,75 +2522,98 @@ function renderPicks() {
   const ms = members();
   const group = ms.length > 1 ? ms : null;
   const userCC = effectiveCC();
+  const regFilter = activeRegion();
+  const homeReg = regFilter && regFilter.home ? regFilter : null;
   const oCC = originCC(), oC = COUNTRIES[oCC] || COUNTRIES[97];
+  const destTrip = isDestFilter(userCC, regFilter);
   let activeCC = userCC, autoDomestic = false, forceGlobalOnce = renderPicks.forceGlobalOnce;
   renderPicks.forceGlobalOnce = false;
 
-  const pickFor = (m, ccArg) => (isPlan ? plan(ms, origin, m, 5, ccArg) : rank(ms, origin, m, new Set(prefs.hidden), ccArg).slice(0, 5));
-  let rows = pickFor(mode, activeCC), widenedFrom = null;
-  if (!rows.length || (userCC && rows.length < 3 && mode.id !== "any")) {
-    const startMode = mode;
-    for (const m of MODES.slice(MODES.indexOf(mode) + 1)) {
-      if (m.id === "any" && startMode.id !== "any" && !userCC && !forceGlobalOnce && !prefs.focus.includes("flags")) {
-        const domRows = pickFor(m, oCC);
-        if (domRows.length) { widenedFrom = startMode; mode = m; activeCC = oCC; autoDomestic = true; rows = domRows; break; }
+  const pickFor = (m, ccArg, regArg = regFilter) => (isPlan ? plan(ms, origin, m, 5, ccArg, regArg) : rank(ms, origin, m, new Set(prefs.hidden), ccArg, regArg).slice(0, 5));
+  let rows = [], widenedFrom = null;
+  if (destTrip) {
+    mode = MODES[3]; // Anywhere within the chosen destination country or map region
+    rows = pickFor(mode, activeCC, regFilter);
+  } else {
+    rows = pickFor(mode, activeCC, homeReg);
+    if (!rows.length || ((userCC || homeReg) && rows.length < 3 && mode.id !== "any")) {
+      const startMode = mode;
+      for (const m of MODES.slice(MODES.indexOf(mode) + 1)) {
+        if (m.id === "any" && startMode.id !== "any" && !userCC && !homeReg && !forceGlobalOnce && !prefs.focus.includes("flags")) {
+          const domRows = pickFor(m, oCC, null);
+          if (domRows.length) { widenedFrom = startMode; mode = m; activeCC = oCC; autoDomestic = true; rows = domRows; break; }
+        }
+        const r = pickFor(m, activeCC, homeReg);
+        if (r.length > rows.length) { widenedFrom = startMode; mode = m; rows = r; if ((!userCC && !homeReg) || rows.length >= 5) break; }
       }
-      const r = pickFor(m, activeCC);
-      if (r.length > rows.length) { widenedFrom = startMode; mode = m; rows = r; if (!userCC || rows.length >= 5) break; }
     }
   }
   effMode = mode;
   effAllowedCC = activeCC;
-  $("#ctl-sum-text").textContent = `${origin.label.replace(/ parkrun$/, "")} · ${mode.label}${activeCC ? " · " + COUNTRIES[activeCC].name : ""} · ${isPlan ? "5-week plan" : "Top 5"}${group ? " · " + ms.map((m) => m.name).join(" & ") : ""}`;
-  // show the distance actually used
+  const tripTag = regFilter ? ` · ${regFilter.label || "Map area"}` : activeCC ? ` · ${COUNTRIES[activeCC].name}` : "";
+  $("#ctl-sum-text").textContent = `${origin.label.replace(/ parkrun$/, "")} · ${destTrip ? "Trip" : mode.label}${tripTag} · ${isPlan ? "5-week plan" : "Top 5"}${group ? " · " + ms.map((m) => m.name).join(" & ") : ""}`;
   document.querySelectorAll("#mode button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.m === mode.id)));
   const names = ms.map((m) => m.name);
   const who = names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names.at(-1) : "";
   fadeSwap($("#picks-title"), isPlan ? (group ? `Five Saturdays for ${who}` : "Your next five Saturdays") : (group ? `Best parkruns for ${who}` : "Your next best parkruns"), true);
 
-  const curHint = modeHint(mode, activeCC);
-  let hintHtml = esc((isPlan
-    ? `Each week assumes ${group ? "you all" : "you"} ran the week before, so the plan spreads the challenges out instead of repeating the same win.`
-    : `The best parkruns ${curHint} of ${origin.label}, ranked by challenge points minus travel.`)
-    + (group ? " Everyone's points are added together; travel counts once." : ""));
-
-  if (autoDomestic && widenedFrom) {
-    hintHtml = `Nothing new ${esc(modeHint(widenedFrom))}, so showing the best across <b>${flag(oC.iso)} ${esc(oC.name)}</b> (<button type="button" class="linkbtn" data-hint-act="global">include other countries too</button>). ` + hintHtml;
-    $("#view-hint").classList.add("widened");
-  } else if (widenedFrom) {
-    hintHtml = `Nothing new ${esc(modeHint(widenedFrom, activeCC))}, so we've looked further: <b>${esc(mode.label.toLowerCase())}</b> (${esc(curHint)}). ` + hintHtml;
-    $("#view-hint").classList.add("widened");
-  } else {
+  const curHint = modeHint(mode, activeCC, regFilter);
+  let hintHtml = "";
+  if (regFilter && !regFilter.home) {
+    const areaCount = EVENTS.filter((e) => (!activeCC || e.cc === activeCC) && inRegion(e, regFilter)).length;
+    hintHtml = `Best parkruns in <b>📍 ${esc(regFilter.label || "selected map area")}</b> (${areaCount} course${areaCount === 1 ? "" : "s"} in area), ranked by challenge points${group ? " across everyone running" : ""}. <button type="button" class="linkbtn" data-hint-act="clear-region">Clear area ×</button>`;
     $("#view-hint").classList.remove("widened");
-  }
+  } else if (destTrip && activeCC && COUNTRIES[activeCC]) {
+    hintHtml = `Best parkruns across <b>${flag(COUNTRIES[activeCC].iso)} ${esc(COUNTRIES[activeCC].name)}</b> ranked by maximum challenge haul (distances shown from ${esc(origin.label)}). <button type="button" class="linkbtn" data-hint-act="clear-cc">All countries</button>`;
+    $("#view-hint").classList.remove("widened");
+  } else {
+    hintHtml = esc((isPlan
+      ? `Each week assumes ${group ? "you all" : "you"} ran the week before, so the plan spreads the challenges out instead of repeating the same win.`
+      : `The best parkruns ${curHint} ${mode.id === "any" ? "from" : "of"} ${origin.label}, ranked by challenge points minus travel.`)
+      + (group ? " Everyone's points are added together; travel counts once." : ""));
 
-  if (rows.length > 0 && rows.length < 5 && mode.id !== "any" && !userCC) {
-    hintHtml += ` · Only <b>${rows.length}</b> unvisited parkrun${rows.length === 1 ? "" : "s"} ${esc(curHint)} — <button type="button" class="linkbtn" data-hint-act="stay-cc">see top 5 across ${flag(oC.iso)} ${esc(oC.name)}</button>.`;
-  }
-  if (prefs.focus.includes("flags") && activeCC && ms.every((m) => m.s.cc.has(activeCC))) {
-    hintHtml += ` · <b>Country Flags</b> needs other countries — <button type="button" class="linkbtn" data-hint-act="clear-cc">switch to All countries</button>.`;
-  } else if (prefs.focus.length && rows.length && mode.id !== "any") {
-    const unmet = prefs.focus.find((fid) => !rows.some((r) => r.gains.some((g) => g.id === fid)));
-    if (unmet) hintHtml += ` · Nothing ${esc(curHint)} moves <b>${esc(GAIN_NAMES[unmet] || unmet)}</b> — <button type="button" class="linkbtn" data-hint-act="widen-any">search Anywhere</button>.`;
-  }
-  if (userCC && userCC !== oCC && COUNTRIES[userCC]) {
-    hintHtml += ` · <button type="button" class="linkbtn" data-hint-act="center-cc" data-cc="${userCC}">Center map on ${flag(COUNTRIES[userCC].iso)} ${esc(COUNTRIES[userCC].name)}</button>`;
+    if (autoDomestic && widenedFrom) {
+      hintHtml = `Nothing new ${esc(modeHint(widenedFrom))}, so showing the best across <b>${flag(oC.iso)} ${esc(oC.name)}</b> (<button type="button" class="linkbtn" data-hint-act="global">include other countries too</button>). ` + hintHtml;
+      $("#view-hint").classList.add("widened");
+    } else if (widenedFrom) {
+      hintHtml = `Nothing new ${esc(modeHint(widenedFrom, activeCC))}, so we've looked further: <b>${esc(mode.label.toLowerCase())}</b> (${esc(curHint)}). ` + hintHtml;
+      $("#view-hint").classList.add("widened");
+    } else {
+      $("#view-hint").classList.remove("widened");
+    }
+
+    if (rows.length > 0 && rows.length < 5 && mode.id !== "any" && !userCC) {
+      hintHtml += ` · Only <b>${rows.length}</b> unvisited parkrun${rows.length === 1 ? "" : "s"} ${esc(curHint)} — <button type="button" class="linkbtn" data-hint-act="stay-cc">see top 5 across ${flag(oC.iso)} ${esc(oC.name)}</button>.`;
+    }
+    if (prefs.focus.includes("flags") && activeCC && ms.every((m) => m.s.cc.has(activeCC))) {
+      hintHtml += ` · <b>Country Flags</b> needs other countries — <button type="button" class="linkbtn" data-hint-act="clear-cc">switch to All countries</button>.`;
+    } else if (prefs.focus.length && rows.length && mode.id !== "any") {
+      const unmet = prefs.focus.find((fid) => !rows.some((r) => r.gains.some((g) => g.id === fid)));
+      if (unmet) hintHtml += ` · Nothing ${esc(curHint)} moves <b>${esc(GAIN_NAMES[unmet] || unmet)}</b> — <button type="button" class="linkbtn" data-hint-act="widen-any">search Anywhere</button>.`;
+    }
   }
   $("#view-hint").innerHTML = hintHtml;
 
   lastRows = rows;
   selPick = 0;
-  $("#radar-cap").textContent = `Distance from ${origin.label}${activeCC ? " · " + COUNTRIES[activeCC].name + " only" : ""}`;
-  $("#radar").innerHTML = radarHtml(rows, activeCC);
+  if (regFilter && !regFilter.home) {
+    $("#radar-cap").textContent = `Trip map · ${regFilter.label || "Selected area"}${activeCC ? " · " + COUNTRIES[activeCC].name : ""}`;
+  } else if (destTrip && activeCC && COUNTRIES[activeCC]) {
+    $("#radar-cap").textContent = `Map of ${COUNTRIES[activeCC].name} picks`;
+  } else {
+    $("#radar-cap").textContent = `Distance from ${origin.label}${activeCC ? " · " + COUNTRIES[activeCC].name + " only" : homeReg ? " · " + homeReg.label + " only" : ""}`;
+  }
+  $("#radar").innerHTML = radarHtml(rows, activeCC, regFilter);
   decorateSea();
   zoomMap();
-  if (!REDUCED()) [...document.querySelectorAll("#radar .rtok")].sort((p, q) => p.dataset.i - q.dataset.i).forEach((pin, k) => {
+  if (mapExpanded) renderExploreUI();
+  if (!REDUCED() && !mapExpanded) [...document.querySelectorAll("#radar .rtok")].sort((p, q) => p.dataset.i - q.dataset.i).forEach((pin, k) => {
     pin.animate([{ transform: "translateY(-26px)", opacity: 0 }, { transform: "translateY(3px)", opacity: 1, offset: 0.7 }, { transform: "none", opacity: 1 }], { duration: 560, delay: 350 + k * 110, easing: "cubic-bezier(.3,.9,.4,1)", fill: "backwards" });
   });
   renderRadarSel();
   const hiddenNote = prefs.hidden.length ? `<div class="hidden-note">${prefs.hidden.length} parkrun${prefs.hidden.length > 1 ? "s" : ""} hidden. <button class="linkbtn" data-unhide>Show ${prefs.hidden.length > 1 ? "them" : "it"} again</button></div>` : "";
   $("#cards").innerHTML = hiddenNote + (rows.length ? rows.map((r, i) => cardHtml(r, i, isPlan, group)).join("")
-    : `<div class="empty">Nothing new ${esc(curHint)}. ${activeCC ? `<button type="button" class="linkbtn" data-hint-act="clear-cc">Show all countries</button>` : "Try a longer trip."}</div>`);
+    : `<div class="empty">No parkruns with new challenges ${esc(curHint)}. ${regFilter && !regFilter.home ? `<button type="button" class="linkbtn" data-hint-act="clear-region">Clear selected area</button>` : activeCC || homeReg ? `<button type="button" class="linkbtn" data-hint-act="clear-cc">Show all countries</button>` : "Try a wider area."}</div>`);
   renderBoard();
   animateIn($("#cards"));
 }
@@ -2275,7 +2634,7 @@ function fadeSwap(el, html, asText) {
 }
 function renderRadarSel() {
   const r = lastRows[selPick];
-  fadeSwap($("#radar-sel"), r ? `<b>${prefs.view === "plan" ? satLabel(selPick) : "Option " + (selPick + 1)}: ${esc(r.ev.name)}</b> · ${fmtKm(r.d)} away. Tap another card or number to see it here.` : "");
+  fadeSwap($("#radar-sel"), r ? `<b>${prefs.view === "plan" ? satLabel(selPick) : "Option " + (selPick + 1)}: ${esc(r.ev.name)}</b> · ${fmtKm(r.d)} away (${Math.round(r.score)} pts). Tap another card or map pin to inspect.` : "");
 }
 function selectPick(i, scroll) {
   if (!lastRows[i]) return;
@@ -2287,12 +2646,13 @@ function selectPick(i, scroll) {
   });
   $("#radar").innerHTML = radarHtml(lastRows, effAllowedCC);
   decorateSea();
+  if (mapExpanded) drawExploreMap();
   // drop the newly selected pin in with a little bounce
   const dropped = document.querySelector(`#radar .rtok[data-i="${i}"]`);
   if (dropped && !REDUCED()) dropped.classList.add("drop");
   renderRadarSel();
   // on phones the map sits above the cards, so bring it into view
-  if (scroll === "map" && matchMedia("(max-width: 900px)").matches) $(".radar-card").scrollIntoView({ behavior: "smooth", block: "start" });
+  if (scroll === "map" && (mapExpanded || matchMedia("(max-width: 900px)").matches)) $(".radar-card").scrollIntoView({ behavior: "smooth", block: "start" });
   if (scroll === "card") document.querySelector(`#cards .pick[data-i="${i}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 const REDUCED = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2318,11 +2678,11 @@ function ufoVisit() {
 }
 setTimeout(ufoVisit, 25000 + Math.random() * 60000);
 function decorateSea() {
-  const km = radarHtml.maxKm, svg = $("#radar svg"), zoom = $("#radar .zoom");
-  if (km <= 45 || radarHtml.space || !svg || !zoom) return;
+  const km = radarHtml.maxKm, vO = radarHtml.viewOrigin || origin, svg = $("#radar svg"), zoom = $("#radar .zoom");
+  if (km <= 45 || radarHtml.space || !vO || !svg || !zoom) return;
   const land = zoom.querySelector('path[fill="var(--land)"]');
   if (!land || !land.isPointInFill) return;
-  const rnd = seeded(Math.round(origin.lat * 977) + Math.round(origin.lon * 613) + Math.round(km));
+  const rnd = seeded(Math.round(vO.lat * 977) + Math.round(vO.lon * 613) + Math.round(km));
   for (let t = 0; t < 80; t++) {
     const a = rnd() * Math.PI * 2, rr = (0.3 + rnd() * 0.55) * 160;
     const x = 180 + Math.cos(a) * rr, y = 180 + Math.sin(a) * rr;
@@ -2341,7 +2701,9 @@ function decorateSea() {
   }
 }
 function zoomMap() {
-  const view = { km: radarHtml.maxKm, space: !!radarHtml.space, at: origin.lat + "," + origin.lon };
+  const vO = radarHtml.viewOrigin || origin;
+  if (!vO) return;
+  const view = { km: radarHtml.maxKm, space: !!radarHtml.space, at: vO.lat.toFixed(2) + "," + vO.lon.toFixed(2) };
   const prev = shownView;
   shownView = view;
   if (!prev || prev.at !== view.at || (Math.abs(prev.km - view.km) < 1 && prev.space === view.space) || REDUCED()) return;
@@ -2793,7 +3155,11 @@ $("#mode").addEventListener("click", (e) => { const b = e.target.closest("button
 $("#view").addEventListener("click", (e) => { const b = e.target.closest("button[data-v]"); if (!b) return; prefs.view = b.dataset.v; savePrefs(); renderPicks(); });
 $("#country-filter")?.addEventListener("change", (e) => {
   prefs.country = e.target.value || "";
+  if (prefs.country) prefs.region = null;
+  // a whole continent only makes sense with the distance limit off
+  if (prefs.country === "cont") prefs.mode = "any";
   savePrefs();
+  if (mapExpanded && prefs.country) { cancelExploreDraft(); frameExploreForCurrent(); expState.viewDirty = true; }
   renderPicks();
 });
 $("#focus-select")?.addEventListener("change", (e) => {
@@ -2802,6 +3168,12 @@ $("#focus-select")?.addEventListener("change", (e) => {
   if (gid) toggleChallengeFocus(gid);
 });
 $("#focus-chips")?.addEventListener("click", (e) => {
+  if (e.target.closest("[data-clear-region]")) {
+    prefs.region = null;
+    savePrefs();
+    renderPicks();
+    return;
+  }
   const b = e.target.closest("[data-unfocus]");
   if (b) toggleChallengeFocus(b.dataset.unfocus);
 });
@@ -2816,9 +3188,10 @@ $("#view-hint")?.addEventListener("click", (e) => {
   const b = e.target.closest("[data-hint-act]");
   if (!b) return;
   const act = b.dataset.hintAct;
-  if (act === "global") { prefs.mode = "any"; prefs.country = ""; savePrefs(); renderPicks.forceGlobalOnce = true; renderPicks(); }
-  else if (act === "stay-cc") { prefs.country = "same"; prefs.mode = "any"; savePrefs(); renderPicks(); }
+  if (act === "global") { prefs.mode = "any"; prefs.country = ""; prefs.region = null; savePrefs(); renderPicks.forceGlobalOnce = true; renderPicks(); }
+  else if (act === "stay-cc") { prefs.country = "same"; prefs.region = null; prefs.mode = "any"; savePrefs(); renderPicks(); }
   else if (act === "clear-cc") { prefs.country = ""; savePrefs(); renderPicks(); }
+  else if (act === "clear-region") { prefs.region = null; savePrefs(); renderPicks(); }
   else if (act === "widen-any") { prefs.mode = "any"; savePrefs(); renderPicks(); }
   else if (act === "center-cc") {
     const cc = +b.dataset.cc;
@@ -3055,6 +3428,1013 @@ $("#share-platforms")?.addEventListener("click", async (e) => {
 });
 
 $("#radar").addEventListener("click", (e) => { const t = e.target.closest(".rtok"); if (t) selectPick(+t.dataset.i, "card"); });
+
+/* ---------- Expandable Interactive Trip Area Explorer ---------- */
+const LANDMARK_CITIES = [
+  ["Lisbon", 38.72, -9.14], ["Madrid", 40.42, -3.70], ["Málaga", 36.72, -4.42], ["Seville", 37.39, -5.98],
+  ["Barcelona", 41.39, 2.17], ["Palma", 39.57, 2.65], ["Valencia", 39.47, -0.38], ["Gibraltar", 36.14, -5.35],
+  ["Paris", 48.86, 2.35], ["Lyon", 45.76, 4.84], ["Marseille", 43.30, 5.37], ["Nice", 43.71, 7.26],
+  ["Brussels", 50.85, 4.35], ["Amsterdam", 52.37, 4.90], ["Zurich", 47.37, 8.54], ["Geneva", 46.20, 6.14],
+  ["Milan", 45.46, 9.19], ["Florence", 43.77, 11.25], ["Venice", 45.44, 12.32], ["Rome", 41.90, 12.50],
+  ["Naples", 40.85, 14.27], ["Bari", 41.12, 16.87], ["Palermo", 38.12, 13.36], ["Catania", 37.50, 15.09],
+  ["Vienna", 48.21, 16.37], ["Munich", 48.14, 11.58], ["Berlin", 52.52, 13.40], ["Frankfurt", 50.11, 8.68],
+  ["Prague", 50.08, 14.44], ["Warsaw", 52.23, 21.01], ["Budapest", 47.50, 19.04], ["Split", 43.51, 16.44],
+  ["Dubrovnik", 42.65, 18.09], ["Athens", 37.98, 23.73], ["Valletta", 35.90, 14.51],
+  ["London", 51.51, -0.13], ["Dublin", 53.35, -6.26], ["Edinburgh", 55.95, -3.19],
+  ["Copenhagen", 55.68, 12.57], ["Stockholm", 59.33, 18.07], ["Oslo", 59.91, 10.75], ["Helsinki", 60.17, 24.94],
+  ["New York", 40.71, -74.01], ["Boston", 42.36, -71.06], ["Washington", 38.91, -77.04], ["Miami", 25.76, -80.19],
+  ["Chicago", 41.88, -87.63], ["Dallas", 32.78, -96.80], ["Denver", 39.74, -104.99], ["Seattle", 47.61, -122.33],
+  ["San Francisco", 37.77, -122.42], ["Los Angeles", 34.05, -118.24], ["Toronto", 43.65, -79.38], ["Vancouver", 49.28, -123.12],
+  ["Sydney", -33.87, 151.21], ["Melbourne", -37.81, 144.96], ["Brisbane", -27.47, 153.03], ["Auckland", -36.85, 174.76],
+  ["Cape Town", -33.92, 18.42], ["Johannesburg", -26.20, 28.05], ["Tokyo", 35.68, 139.69], ["Singapore", 1.35, 103.82],
+];
+
+const expState = {
+  lat: 47,
+  lon: 9.5,
+  span: 40, // visible map height in Mercator degrees (the zoom level); moving the map never changes its shape
+  tool: "pan",
+  inited: false,
+  dragging: false,
+  dragKind: "",
+  moved: false,
+  startX: 0,
+  startY: 0,
+  startLat: 0,
+  startLon: 0,
+  hoverSlug: "",
+  draft: null,      // points of the area being drawn, [[lon, lat], ...]
+  freehand: null,   // screen points while sketching with the pointer held down
+  cursor: null,
+  vertexIdx: -1,
+  polyScreen: null,
+  viewDirty: false,
+};
+let expScreenPts = [];
+const EXP_SPAN_MIN = 1.2;
+const expMaxSpan = (W, H) => Math.min(170, (360 * H) / Math.max(1, W));
+const wrap180 = (v) => ((((v + 180) % 360) + 360) % 360) - 180;
+// Web Mercator (the same flat map as most online maps), measured in degrees
+const mercY = (lat) => (180 / Math.PI) * Math.log(Math.tan(Math.PI / 4 + (Math.max(-84, Math.min(84, lat)) * Math.PI) / 360));
+const mercLat = (y) => (360 / Math.PI) * Math.atan(Math.exp((y * Math.PI) / 180)) - 90;
+
+function expStageSize() {
+  const stage = $("#explore-stage");
+  const W = stage ? stage.clientWidth : 0, H = stage ? stage.clientHeight : 0;
+  return W > 40 && H > 40 ? [W, H] : [990, 440];
+}
+function setExploreView(lat, lon, spanLat) {
+  const [W, H] = expStageSize();
+  const yT = mercY(lat + spanLat / 2), yB = mercY(lat - spanLat / 2);
+  expState.lat = mercLat((yT + yB) / 2);
+  expState.lon = wrap180(lon);
+  expState.span = Math.max(EXP_SPAN_MIN, Math.min(expMaxSpan(W, H), yT - yB));
+  expState.inited = true;
+}
+function frameBoxOnExplore(x0, y0, x1, y1, pad = 1.3) {
+  const [W, H] = expStageSize();
+  const aspect = W / H;
+  const yT = mercY(Math.max(y0, y1)), yB = mercY(Math.min(y0, y1));
+  const dLon = Math.max(1.5, x0 <= x1 ? x1 - x0 : 360 - x0 + x1);
+  expState.lat = mercLat((yT + yB) / 2);
+  expState.lon = wrap180(x0 <= x1 ? (x0 + x1) / 2 : (x0 + x1 + 360) / 2);
+  expState.span = Math.max(EXP_SPAN_MIN, Math.min(expMaxSpan(W, H), Math.max((yT - yB) * pad, (dLon * pad) / aspect, 2)));
+  expState.inited = true;
+}
+function frameExploreForEvents(list, pad = 1.4) {
+  if (!list.length) return;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const e of list) {
+    if (e.lon < x0) x0 = e.lon; if (e.lon > x1) x1 = e.lon;
+    if (e.lat < y0) y0 = e.lat; if (e.lat > y1) y1 = e.lat;
+  }
+  frameBoxOnExplore(x0, y0, x1, y1, pad);
+}
+function frameExploreForCountry(cc) {
+  if (cc) frameExploreForEvents(EVENTS.filter((e) => e.cc === cc), 1.42);
+}
+function frameExploreForPreset(p) {
+  if (Array.isArray(p.box)) frameBoxOnExplore(p.box[0], p.box[1], p.box[2], p.box[3], 1.12);
+  else if (p.view) setExploreView(p.view.lat, p.view.lon, p.view.spanLat);
+}
+function frameExploreForCurrent() {
+  const reg = prefs.region;
+  if (reg) {
+    const preset = REGION_PRESETS.find((p) => p.id === reg.id);
+    if (preset) { frameExploreForPreset(preset); return; }
+    if (Array.isArray(reg.box)) { frameBoxOnExplore(reg.box[0], reg.box[1], reg.box[2], reg.box[3], 1.35); return; }
+  }
+  const cc = effectiveCC();
+  if (cc) { frameExploreForCountry(cc); return; }
+  const home = activeRegion();
+  if (home && home.home && Array.isArray(home.ccs)) { frameExploreForEvents(EVENTS.filter((e) => home.ccs.includes(e.cc)), 1.12); return; }
+  if (origin && origin.lat > 34 && origin.lat < 65 && origin.lon > -15 && origin.lon < 35) frameBoxOnExplore(-11, 35.5, 30, 60, 1.04);
+  else if (origin) setExploreView(Math.max(-60, Math.min(60, origin.lat)), origin.lon, 24);
+  expState.inited = true;
+}
+
+function cancelExploreDraft() {
+  expState.draft = null;
+  expState.freehand = null;
+  expState.cursor = null;
+}
+function polyBox(poly) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [lon, lat] of poly) {
+    if (lon < x0) x0 = lon; if (lon > x1) x1 = lon;
+    if (lat < y0) y0 = lat; if (lat > y1) y1 = lat;
+  }
+  const r3 = (n) => Math.round(n * 1000) / 1000;
+  return [r3(x0), r3(y0), r3(x1), r3(y1)];
+}
+function setMapRegion(reg) {
+  prefs.region = reg;
+  if (reg) prefs.country = "";
+  savePrefs();
+  renderPicks();
+}
+function commitDrawnArea(pts) {
+  const r3 = (n) => Math.round(n * 1000) / 1000;
+  const poly = pts.map(([lon, lat]) => [r3(lon), r3(lat)]);
+  cancelExploreDraft();
+  expState.tool = "pan";
+  expState.viewDirty = false;
+  setMapRegion({ id: "draw", label: "Drawn area", poly, box: polyBox(poly) });
+}
+// Keep only the corners of a hand-drawn line (Douglas-Peucker), so a sketch becomes a tidy shape with a few points.
+function simplifyPath(pts, tol) {
+  if (pts.length <= 2) return pts.slice();
+  const keep = new Uint8Array(pts.length);
+  keep[0] = keep[pts.length - 1] = 1;
+  const stack = [[0, pts.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop();
+    const ax = pts[a][0], ay = pts[a][1], dx = pts[b][0] - ax, dy = pts[b][1] - ay, len = Math.hypot(dx, dy);
+    let md = 0, mi = -1;
+    for (let i = a + 1; i < b; i++) {
+      const px = pts[i][0] - ax, py = pts[i][1] - ay;
+      const d = len < 1e-6 ? Math.hypot(px, py) : Math.abs(px * dy - py * dx) / len;
+      if (d > md) { md = d; mi = i; }
+    }
+    if (mi > 0 && md > tol) { keep[mi] = 1; stack.push([a, mi], [mi, b]); }
+  }
+  return pts.filter((_, i) => keep[i]);
+}
+
+function toggleMapExpand(force) {
+  mapExpanded = typeof force === "boolean" ? force : !mapExpanded;
+  $("#picks-grid")?.classList.toggle("map-expanded", mapExpanded);
+  if ($("#radar")) $("#radar").hidden = mapExpanded;
+  if ($("#area-explorer")) $("#area-explorer").hidden = !mapExpanded;
+  updateMapExpandBtn();
+  document.querySelectorAll("#radar-legend [data-vor]").forEach((el) => { el.hidden = mapExpanded; });
+  document.querySelectorAll("#radar-legend [data-exp-leg]").forEach((el) => { el.hidden = !mapExpanded; });
+  if ($("#radar-legend-note")) {
+    $("#radar-legend-note").hidden = false;
+    $("#radar-legend-note").textContent = mapExpanded ? EXP_LEGEND_NOTE : "Each patch is the area closest to one parkrun.";
+  }
+  if (mapExpanded) {
+    if (!expState.inited) frameExploreForCurrent();
+    expState.viewDirty = !prefs.region;
+    renderExploreUI();
+    requestAnimationFrame(() => drawExploreMap());
+  } else {
+    cancelExploreDraft();
+    expState.tool = "pan";
+    if ($("#explore-tip")) $("#explore-tip").hidden = true;
+    $("#radar").innerHTML = radarHtml(lastRows, effAllowedCC);
+    decorateSea();
+  }
+}
+
+function expProj(W, H) {
+  const k = H / expState.span, cy = mercY(expState.lat), cLon = expState.lon;
+  const toXY = (lat, lon) => [W / 2 + wrap180(lon - cLon) * k, H / 2 - (mercY(lat) - cy) * k];
+  // longitude is left un-wrapped here so shapes drawn across the date line stay in one piece
+  const toLL = (x, y) => [mercLat(cy - (y - H / 2) / k), cLon + (x - W / 2) / k];
+  return { k, cy, toXY, toLL };
+}
+
+function updateExploreOverlays() {
+  const drawing = expState.tool === "draw";
+  const n = expState.draft ? expState.draft.length : 0;
+  const sb = $("#exp-search-area"), db = $("#exp-draw-bar");
+  if (sb) sb.hidden = drawing || !expState.viewDirty;
+  if (db) db.hidden = !drawing;
+  if ($("#exp-draw-hint")) {
+    $("#exp-draw-hint").textContent = n === 0
+      ? "Click the map to add points, or hold and drag to sketch your area"
+      : n < 3 ? "Keep clicking to add points" : "Click the first point (or Finish) to close the area";
+  }
+  if ($("#exp-draw-undo")) $("#exp-draw-undo").hidden = n === 0;
+  if ($("#exp-draw-finish")) $("#exp-draw-finish").hidden = n < 3;
+}
+
+function renderExploreUI() {
+  const preEl = $("#exp-presets");
+  if (preEl) {
+    const activeId = prefs.region && prefs.region.id ? prefs.region.id : "";
+    preEl.innerHTML = REGION_PRESETS.map((p) =>
+      `<button type="button" class="exp-preset" data-reg-preset="${p.id}" aria-pressed="${activeId === p.id}">${p.icon} ${esc(p.label)}</button>`
+    ).join("");
+  }
+  document.querySelectorAll("#exp-tools .exp-tool").forEach((b) => {
+    b.setAttribute("aria-pressed", String(b.dataset.expTool === expState.tool));
+  });
+  $("#explore-canvas")?.classList.toggle("draw-mode", expState.tool === "draw");
+  if ($("#exp-clear")) $("#exp-clear").hidden = !prefs.region;
+  updateExploreOverlays();
+  drawExploreMap();
+}
+
+let expGeo = null;
+function exploreGeo() {
+  if (expGeo) return expGeo;
+  const m = mapData();
+  const conv = (list) => list.map((p) => {
+    const n = p.pts.length, lon = new Float32Array(n), my = new Float32Array(n);
+    for (let i = 0; i < n; i++) { lon[i] = p.pts[i][1]; my[i] = mercY(p.pts[i][0]); }
+    return { lon, my, box: p.box };
+  });
+  return (expGeo = { land: conv(m.land), borders: conv(m.borders) });
+}
+
+// Scores inside the chosen country or area, remembered so moving the map stays smooth.
+let expScoreCache = { key: "", map: null };
+function exploreScores(ms, actCC, reg) {
+  const o = origin || ctx?.home;
+  const key = JSON.stringify([actCC || 0, reg ? [reg.id, reg.poly || reg.box || reg.ccs || 0] : 0, prefs.focus, prefs.hidden, prefs.record ? 1 : 0, o ? [o.lat, o.lon] : 0, ms.map((m) => [m.id, m.s.visited.size])]);
+  if (expScoreCache.map && (expScoreCache.key === key || (expState.dragging && expState.dragKind === "vertex"))) return expScoreCache.map;
+  const rows = rank(ms, o, MODES[3], new Set(prefs.hidden), actCC, reg);
+  const map = new Map(rows.map((r) => [r.ev.slug, { ev: r.ev, points: r.points, ticks: r.gains.filter((x) => !x.minor).length || r.gains.length, gains: r.gains }]));
+  expScoreCache = { key, map };
+  return map;
+}
+
+let expDrawQueued = false;
+function scheduleExploreDraw() {
+  if (expDrawQueued) return;
+  expDrawQueued = true;
+  requestAnimationFrame(() => { expDrawQueued = false; drawExploreMap(); });
+}
+
+function drawExploreMap() {
+  const stage = $("#explore-stage"), canvas = $("#explore-canvas");
+  if (!stage || !canvas || !mapExpanded) return;
+  const rect = stage.getBoundingClientRect();
+  const W = rect.width, H = rect.height;
+  if (W < 20 || H < 20) return;
+  expState.span = Math.max(EXP_SPAN_MIN, Math.min(expMaxSpan(W, H), expState.span));
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const cw = Math.round(W * dpr), ch = Math.round(H * dpr);
+  if (canvas.width !== cw || canvas.height !== ch) {
+    canvas.width = cw;
+    canvas.height = ch;
+  }
+  const g = canvas.getContext("2d");
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const { k, cy, toXY, toLL } = expProj(W, H);
+  const cLon = expState.lon;
+  const latTop = toLL(0, 0)[0], latBot = toLL(0, H)[0];
+  const visLat = latTop - latBot;
+  const minLatV = latBot - 1.5, maxLatV = latTop + 1.5;
+  const halfLon = W / (2 * k) + 2;
+  const vx0 = cLon - halfLon, vx1 = cLon + halfLon;
+
+  // 1. Sea + a faint grid
+  const seaGrad = g.createLinearGradient(0, 0, 0, H);
+  seaGrad.addColorStop(0, "#d8eefb");
+  seaGrad.addColorStop(1, "#c5e2f3");
+  g.fillStyle = seaGrad;
+  g.fillRect(0, 0, W, H);
+
+  const gridStep = visLat > 70 ? 30 : visLat > 30 ? 10 : visLat > 12 ? 5 : visLat > 5 ? 2 : 1;
+  g.strokeStyle = "rgba(84, 128, 152, 0.14)";
+  g.lineWidth = 1;
+  g.beginPath();
+  for (let la = Math.ceil(Math.max(-80, minLatV) / gridStep) * gridStep; la <= Math.min(80, maxLatV); la += gridStep) {
+    const gy = H / 2 - (mercY(la) - cy) * k;
+    g.moveTo(0, gy);
+    g.lineTo(W, gy);
+  }
+  for (let lo = Math.floor(vx0 / gridStep) * gridStep; lo <= vx1; lo += gridStep) {
+    const gx = W / 2 + (lo - cLon) * k;
+    g.moveTo(gx, 0);
+    g.lineTo(gx, H);
+  }
+  g.stroke();
+
+  // 2. Land and borders
+  const geo = exploreGeo();
+  const trace = (p, close) => {
+    const n = p.lon.length;
+    if (!n || p.box[3] < minLatV || p.box[1] > maxLatV || p.box[3] < -60) return;
+    const off = wrap180(p.lon[0] - cLon) - (p.lon[0] - cLon);
+    let o = NaN;
+    for (const c of [off, off - 360, off + 360]) {
+      if (p.box[2] + c >= vx0 && p.box[0] + c <= vx1) { o = c; break; }
+    }
+    if (Number.isNaN(o)) return;
+    let cur = p.lon[0] + o;
+    let lx = W / 2 + (cur - cLon) * k, ly = H / 2 - (p.my[0] - cy) * k;
+    g.moveTo(lx, ly);
+    for (let i = 1; i < n; i++) {
+      const d = wrap180(p.lon[i] - cur);
+      cur += d;
+      const x = W / 2 + (cur - cLon) * k, y = H / 2 - (p.my[i] - cy) * k;
+      if (Math.abs(d) > 85) g.moveTo(x, y);
+      else if (Math.abs(x - lx) + Math.abs(y - ly) >= 0.7) g.lineTo(x, y);
+      else continue;
+      lx = x; ly = y;
+    }
+    if (close) g.closePath();
+  };
+
+  g.fillStyle = "#fbf8ec";
+  g.strokeStyle = "#91baa0";
+  g.lineWidth = 1.1;
+  g.lineJoin = "round";
+  g.beginPath();
+  for (const poly of geo.land) trace(poly, true);
+  g.fill();
+  g.stroke();
+
+  g.save();
+  g.strokeStyle = "#abc4b2";
+  g.lineWidth = 0.9;
+  g.setLineDash([4, 3]);
+  g.beginPath();
+  for (const b of geo.borders) trace(b, false);
+  g.stroke();
+  g.restore();
+
+  // 3. The chosen area: everything outside it is dimmed
+  const polyToScreen = (poly) => {
+    const o = wrap180(poly[0][0] - cLon) - (poly[0][0] - cLon);
+    return poly.map(([lon, lat]) => [W / 2 + (lon + o - cLon) * k, H / 2 - (mercY(lat) - cy) * k]);
+  };
+  const reg = activeRegion();
+  expState.polyScreen = null;
+  if (reg && Array.isArray(reg.poly) && reg.poly.length >= 3) {
+    const sp = polyToScreen(reg.poly);
+    if (reg === prefs.region) expState.polyScreen = sp;
+    const path = () => { sp.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); };
+    g.save();
+    g.beginPath();
+    g.rect(0, 0, W, H);
+    path();
+    g.fillStyle = "rgba(22, 46, 31, 0.12)";
+    g.fill("evenodd");
+    g.beginPath();
+    path();
+    g.strokeStyle = "#e8940a";
+    g.lineWidth = 2;
+    g.lineJoin = "round";
+    g.setLineDash([6, 4]);
+    g.stroke();
+    g.restore();
+  } else if (reg && Array.isArray(reg.box)) {
+    const [bx0, by0, bx1, by1] = reg.box;
+    const [rx0, ry1] = toXY(by0, bx0);
+    const [rx1, ry0] = toXY(by1, bx1);
+    const left = Math.min(rx0, rx1), right = Math.max(rx0, rx1);
+    const top = Math.min(ry0, ry1), bot = Math.max(ry0, ry1);
+    g.fillStyle = "rgba(22, 46, 31, 0.12)";
+    if (top > 0) g.fillRect(0, 0, W, top);
+    if (bot < H) g.fillRect(0, bot, W, H - bot);
+    if (left > 0) g.fillRect(0, Math.max(0, top), left, Math.min(H, bot) - Math.max(0, top));
+    if (right < W) g.fillRect(right, Math.max(0, top), W - right, Math.min(H, bot) - Math.max(0, top));
+    g.save();
+    g.strokeStyle = "#e8940a";
+    g.lineWidth = 2;
+    g.setLineDash([6, 4]);
+    g.strokeRect(left, top, right - left, bot - top);
+    g.restore();
+  }
+
+  // 4. Scores for the parkruns on screen (the same numbers as the cards below)
+  const ms = members();
+  const cr = current ? rankCountriesFor(ms, origin || ctx?.home) : null;
+  const globalBySlug = cr ? cr.bySlug : new Map();
+  const actCC = effAllowedCC;
+  const filteredBySlug = current && (actCC || reg) ? exploreScores(ms, actCC, reg) : globalBySlug;
+  const pickIdxBySlug = new Map(lastRows.map((r, idx) => [r.ev.slug, idx]));
+
+  const visEvs = [];
+  const candScores = [];
+  for (const ev of EVENTS) {
+    if (ev.lat < minLatV || ev.lat > maxLatV) continue;
+    const [x, y] = toXY(ev.lat, ev.lon);
+    if (x < -14 || x > W + 14 || y < -14 || y > H + 14) continue;
+    const inFilter = (!actCC || ev.cc === actCC) && (!reg || inRegion(ev, reg));
+    const allDone = ms.every((m) => m.s.slugs.has(ev.slug));
+    const someDone = !allDone && ms.some((m) => m.s.slugs.has(ev.slug));
+    const sc = (inFilter ? filteredBySlug.get(ev.slug) : null) || globalBySlug.get(ev.slug);
+    const pts = sc ? sc.points : 0;
+    const ticks = sc ? sc.ticks : 0;
+    if (inFilter && !allDone && pts > 0) candScores.push(pts);
+    visEvs.push({ ev, x, y, inFilter, allDone, someDone, pts, ticks, sc, pickIdx: pickIdxBySlug.get(ev.slug) });
+  }
+  candScores.sort((a, b) => b - a);
+  const pCut = candScores.length ? candScores[Math.min(candScores.length - 1, Math.max(4, Math.floor(candScores.length * 0.28)))] : 60;
+  const awesomeCut = Math.max(32, Math.min(95, pCut));
+
+  const labelBoxes = [];
+  const collides = (b) => labelBoxes.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
+  const dotBoxes = visEvs.filter((p) => p.inFilter).map((p) => [p.x - 8, p.y - 8, p.x + 8, p.y + 8]);
+  visEvs.forEach((p) => {
+    if (p.pickIdx !== undefined) labelBoxes.push([p.x - 16, p.y - 30, p.x + 16, p.y + 8]);
+  });
+
+  // 5. Where you're starting from
+  if (origin) {
+    const [ox, oy] = toXY(origin.lat, origin.lon);
+    if (ox >= 0 && ox <= W && oy >= 0 && oy <= H) {
+      g.fillStyle = "rgba(58, 128, 212, 0.2)";
+      g.beginPath(); g.arc(ox, oy, 10, 0, Math.PI * 2); g.fill();
+      g.fillStyle = "#3a80d4";
+      g.strokeStyle = "#ffffff";
+      g.lineWidth = 2;
+      g.beginPath(); g.arc(ox, oy, 5, 0, Math.PI * 2); g.fill(); g.stroke();
+    }
+  }
+
+  // 6. Parkruns: done, still to do, and gold for the highest scores
+  expScreenPts = visEvs;
+  for (const p of visEvs) {
+    if (p.pickIdx !== undefined || !p.allDone) continue;
+    g.globalAlpha = p.inFilter ? 0.85 : 0.28;
+    g.fillStyle = "#68a878";
+    g.beginPath(); g.arc(p.x, p.y, 2.5, 0, Math.PI * 2); g.fill();
+  }
+  for (const p of visEvs) {
+    if (p.pickIdx !== undefined || p.allDone || p.pts >= awesomeCut) continue;
+    g.globalAlpha = p.inFilter ? 0.92 : 0.28;
+    g.fillStyle = p.someDone ? "#9dd4a8" : "#2e8b47";
+    g.strokeStyle = "#ffffff";
+    g.lineWidth = 1.1;
+    g.beginPath(); g.arc(p.x, p.y, 3.3, 0, Math.PI * 2); g.fill(); g.stroke();
+  }
+  const awesomeList = visEvs.filter((p) => !p.allDone && p.pts >= awesomeCut).sort((a, b) => a.pts - b.pts);
+  for (const p of awesomeList) {
+    if (p.pickIdx !== undefined) continue;
+    g.globalAlpha = p.inFilter ? 1 : 0.34;
+    if (p.inFilter) {
+      g.fillStyle = "rgba(246, 183, 58, 0.3)";
+      g.beginPath(); g.arc(p.x, p.y, 8.8, 0, Math.PI * 2); g.fill();
+    }
+    const isHov = p.ev.slug === expState.hoverSlug;
+    g.fillStyle = "#f6b73a";
+    g.strokeStyle = isHov ? "#213628" : "#8a5200";
+    g.lineWidth = isHov ? 2.2 : 1.4;
+    g.beginPath(); g.arc(p.x, p.y, isHov ? 6.5 : 5.0, 0, Math.PI * 2); g.fill(); g.stroke();
+  }
+  g.globalAlpha = 1;
+
+  // 7. Numbered pins for the picks, with a label on the selected one
+  const pickPts = visEvs.filter((p) => p.pickIdx !== undefined).sort((a, b) => b.pickIdx - a.pickIdx);
+  if (prefs.view === "plan" && lastRows.length > 1) {
+    g.save();
+    g.strokeStyle = "#2a7d45";
+    g.lineWidth = 2.4;
+    g.setLineDash([2, 5]);
+    g.beginPath();
+    lastRows.forEach((r, idx) => {
+      const [px, py] = toXY(r.ev.lat, r.ev.lon);
+      idx === 0 ? g.moveTo(px, py) : g.lineTo(px, py);
+    });
+    g.stroke();
+    g.restore();
+  }
+  for (const p of pickPts) {
+    const isSel = p.pickIdx === selPick;
+    const rad = isSel ? 11 : 9;
+    g.fillStyle = isSel ? "#f6b73a" : "#2a7d45";
+    g.strokeStyle = "#ffffff";
+    g.lineWidth = 2;
+    g.beginPath();
+    g.arc(p.x, p.y - rad - 2, rad, 0, Math.PI * 2);
+    g.fill();
+    g.stroke();
+    g.beginPath();
+    g.moveTo(p.x - 4.5, p.y - 6);
+    g.lineTo(p.x, p.y);
+    g.lineTo(p.x + 4.5, p.y - 6);
+    g.closePath();
+    g.fill();
+    g.fillStyle = isSel ? "#3a2a00" : "#ffffff";
+    g.font = `900 ${isSel ? 13 : 11.5}px "Big Shoulders Display", system-ui, sans-serif`;
+    g.textAlign = "center";
+    g.fillText(String(p.pickIdx + 1), p.x, p.y - rad + 2.5);
+    if (isSel) {
+      g.font = "800 11.5px Figtree, system-ui, sans-serif";
+      const txt = `${p.ev.name} · ${Math.round(p.pts)} pts`;
+      const tw = g.measureText(txt).width + 14;
+      const lx = Math.max(tw / 2 + 6, Math.min(W - tw / 2 - 6, p.x));
+      const ly = p.y > 54 ? p.y - 34 : p.y + 16;
+      labelBoxes.push([lx - tw / 2 - 2, ly - 12, lx + tw / 2 + 2, ly + 8]);
+      g.fillStyle = "#fffdf6";
+      g.strokeStyle = "#f2b72b";
+      g.lineWidth = 1.5;
+      g.beginPath(); g.roundRect(lx - tw / 2, ly - 11, tw, 18, 9); g.fill(); g.stroke();
+      g.fillStyle = "#3a2a00";
+      g.fillText(txt, lx, ly + 2);
+    }
+  }
+
+  // 8. Score labels on the best parkruns that have room for one
+  const topBadges = [...awesomeList].filter((p) => p.inFilter && p.pickIdx !== selPick).reverse();
+  let shownBadges = 0;
+  g.font = "800 10.5px Figtree, system-ui, sans-serif";
+  for (const p of topBadges) {
+    if (shownBadges >= 13) break;
+    const shortName = p.ev.name.length > 15 ? p.ev.name.slice(0, 14) + "…" : p.ev.name;
+    const txt = visLat <= 28 || shownBadges < 6 ? `★ ${Math.round(p.pts)} · ${shortName}` : `★ ${Math.round(p.pts)}`;
+    const tw = g.measureText(txt).width + 10;
+    const lx = p.x, ly = p.y - (p.pickIdx !== undefined ? 28 : 13);
+    if (lx - tw / 2 < 6 || lx + tw / 2 > W - 6 || ly - 10 < 6) continue;
+    const box = [lx - tw / 2 - 3, ly - 11, lx + tw / 2 + 3, ly + 6];
+    if (collides(box)) continue;
+    labelBoxes.push(box);
+    shownBadges++;
+    g.fillStyle = "rgba(255, 248, 224, 0.96)";
+    g.strokeStyle = "#e8a317";
+    g.lineWidth = 1.15;
+    g.beginPath(); g.roundRect(lx - tw / 2, ly - 10, tw, 15, 7.5); g.fill(); g.stroke();
+    g.fillStyle = "#5a3d00";
+    g.textAlign = "center";
+    g.fillText(txt, lx, ly + 1);
+  }
+
+  // 9. City names for orientation, only where they don't sit on a parkrun or a label
+  g.font = "700 10.5px Figtree, system-ui, sans-serif";
+  g.textAlign = "center";
+  g.lineJoin = "round";
+  for (const [cname, clat, clon] of LANDMARK_CITIES) {
+    if (clat < minLatV || clat > maxLatV) continue;
+    const [cx, cyy] = toXY(clat, clon);
+    if (cx < 26 || cx > W - 26 || cyy < 18 || cyy > H - 14) continue;
+    const tw = cname.length * 5.6 + 8;
+    const box = [cx - tw / 2, cyy - 11, cx + tw / 2, cyy + 4];
+    if (collides(box) || dotBoxes.some((q) => box[0] < q[2] && box[2] > q[0] && box[1] < q[3] && box[3] > q[1])) continue;
+    labelBoxes.push(box);
+    g.strokeStyle = "rgba(255, 255, 255, 0.9)";
+    g.lineWidth = 3;
+    g.strokeText(cname, cx, cyy);
+    g.fillStyle = "#536b5c";
+    g.fillText(cname, cx, cyy);
+  }
+
+  // 10. Handles on a drawn area: drag a corner to move it, drag a small dot to add a corner
+  const dot = (x, y, r, fill, stroke, lw) => {
+    g.fillStyle = fill; g.strokeStyle = stroke; g.lineWidth = lw;
+    g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill(); g.stroke();
+  };
+  if (expState.polyScreen && !expState.draft && !expState.freehand) {
+    const sp = expState.polyScreen, n = sp.length;
+    if (n <= 16) {
+      for (let i = 0; i < n; i++) {
+        const j = (i + 1) % n;
+        dot((sp[i][0] + sp[j][0]) / 2, (sp[i][1] + sp[j][1]) / 2, 3.2, "rgba(255, 255, 255, 0.92)", "#e8940a", 1.2);
+      }
+    }
+    sp.forEach(([x, y], i) => {
+      const active = expState.dragging && expState.dragKind === "vertex" && i === expState.vertexIdx;
+      dot(x, y, active ? 6.5 : n > 16 ? 3.8 : 4.8, "#f6b73a", "#5a3d00", 1.4);
+    });
+  }
+
+  // 11. The area being drawn right now
+  if (expState.freehand && expState.freehand.length > 1) {
+    const fh = expState.freehand;
+    g.save();
+    g.beginPath();
+    fh.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+    g.fillStyle = "rgba(246, 183, 58, 0.16)";
+    g.fill();
+    g.strokeStyle = "#d68606";
+    g.lineWidth = 2.5;
+    g.lineJoin = "round";
+    g.lineCap = "round";
+    g.stroke();
+    g.restore();
+  } else if (expState.draft && expState.draft.length) {
+    const sp = polyToScreen(expState.draft), n = sp.length;
+    g.save();
+    g.lineJoin = "round";
+    if (n >= 3) {
+      g.beginPath();
+      sp.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+      g.closePath();
+      g.fillStyle = "rgba(246, 183, 58, 0.16)";
+      g.fill();
+    }
+    g.beginPath();
+    sp.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+    g.strokeStyle = "#d68606";
+    g.lineWidth = 2.2;
+    g.stroke();
+    if (expState.cursor) {
+      g.setLineDash([5, 4]);
+      g.beginPath();
+      g.moveTo(sp[n - 1][0], sp[n - 1][1]);
+      g.lineTo(expState.cursor[0], expState.cursor[1]);
+      if (n >= 2) g.lineTo(sp[0][0], sp[0][1]);
+      g.strokeStyle = "rgba(214, 134, 6, 0.7)";
+      g.lineWidth = 1.6;
+      g.stroke();
+      g.setLineDash([]);
+    }
+    sp.forEach(([x, y], i) => {
+      if (i === 0 && n >= 3) {
+        dot(x, y, 10, "rgba(246, 183, 58, 0.3)", "rgba(246, 183, 58, 0)", 0);
+        dot(x, y, 6.2, "#f6b73a", "#5a3d00", 1.6);
+      } else dot(x, y, 4.4, "#ffffff", "#d68606", 1.8);
+    });
+    g.restore();
+  }
+}
+
+function initAreaExplorer() {
+  const expandBtn = $("#map-expand-btn");
+  if (!expandBtn) return;
+  expandBtn.addEventListener("click", () => toggleMapExpand());
+
+  const canvas = $("#explore-canvas"), stage = $("#explore-stage"), tip = $("#explore-tip");
+  if (!canvas || !stage) return;
+
+  const localXY = (e) => {
+    const r = stage.getBoundingClientRect();
+    return [e.clientX - r.left, e.clientY - r.top, r.width, r.height];
+  };
+  const clampSpan = (s, W, H) => Math.max(EXP_SPAN_MIN, Math.min(expMaxSpan(W, H), s));
+  const clampLat = (l) => Math.max(-78, Math.min(78, l));
+  const markViewMoved = () => {
+    if (expState.viewDirty) return;
+    expState.viewDirty = true;
+    updateExploreOverlays();
+  };
+  // a map position for a screen point; refLon keeps a shape's corners on the same side of the date line
+  const screenToLL = (x, y, W, H, refLon) => {
+    const [lat, lonRaw] = expProj(W, H).toLL(x, y);
+    const lon = refLon === undefined ? wrap180(lonRaw) : refLon + wrap180(lonRaw - refLon);
+    return [Math.round(lon * 1e4) / 1e4, Math.round(lat * 1e4) / 1e4];
+  };
+  const zoomAt = (mx, my, W, H, factor) => {
+    const [lat0, lon0] = expProj(W, H).toLL(mx, my);
+    expState.span = clampSpan(expState.span * factor, W, H);
+    const [lat1, lon1] = expProj(W, H).toLL(mx, my);
+    expState.lon = wrap180(expState.lon + lon0 - lon1);
+    expState.lat = clampLat(mercLat(mercY(expState.lat) + mercY(lat0) - mercY(lat1)));
+    markViewMoved();
+    scheduleExploreDraw();
+  };
+
+  $("#exp-presets")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-reg-preset]");
+    if (!b) return;
+    const p = REGION_PRESETS.find((x) => x.id === b.dataset.regPreset);
+    if (!p) return;
+    cancelExploreDraft();
+    expState.tool = "pan";
+    if (prefs.region && prefs.region.id === p.id) {
+      setMapRegion(null);
+    } else {
+      frameExploreForPreset(p);
+      expState.viewDirty = false;
+      setMapRegion({ id: p.id, label: p.label, box: p.box || null, exclCC: p.exclCC || null, kind: p.kind || null });
+    }
+  });
+
+  $("#exp-tools")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-exp-tool]");
+    if (!b) return;
+    expState.tool = b.dataset.expTool;
+    if (expState.tool !== "draw") cancelExploreDraft();
+    if (tip) tip.hidden = true;
+    renderExploreUI();
+  });
+
+  $("#exp-search-area")?.addEventListener("click", () => {
+    const [W, H] = [stage.clientWidth, stage.clientHeight];
+    const { toLL } = expProj(W, H);
+    const [latTop, lonLeft] = toLL(W * 0.02, H * 0.03);
+    const [latBot, lonRight] = toLL(W * 0.98, H * 0.97);
+    const r2 = (n) => Math.round(n * 100) / 100;
+    const whole = lonRight - lonLeft >= 359;
+    expState.viewDirty = false;
+    setMapRegion({ id: "view", label: "This map area", box: [whole ? -180 : r2(wrap180(lonLeft)), r2(latBot), whole ? 180 : r2(wrap180(lonRight)), r2(latTop)] });
+  });
+
+  $("#exp-clear")?.addEventListener("click", () => {
+    cancelExploreDraft();
+    expState.viewDirty = true;
+    setMapRegion(null);
+  });
+
+  $("#exp-draw-bar")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-draw-act]");
+    if (!b) return;
+    const act = b.dataset.drawAct;
+    if (act === "undo" && expState.draft) {
+      expState.draft.pop();
+      if (!expState.draft.length) cancelExploreDraft();
+    } else if (act === "finish" && expState.draft && expState.draft.length >= 3) {
+      commitDrawnArea(expState.draft);
+      return;
+    } else if (act === "cancel") {
+      cancelExploreDraft();
+      expState.tool = "pan";
+    }
+    renderExploreUI();
+  });
+
+  document.querySelector(".exp-zoom")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-exp-zoom]");
+    if (!b) return;
+    const [W, H] = [stage.clientWidth, stage.clientHeight];
+    zoomAt(W / 2, H / 2, W, H, +b.dataset.expZoom > 0 ? 0.6 : 1 / 0.6);
+  });
+
+  const hitPoint = (x, y) => {
+    let best = null, bestScore = -1e9;
+    for (const p of expScreenPts) {
+      const py = p.pickIdx !== undefined ? p.y - 10 : p.y;
+      const d = Math.hypot(p.x - x, py - y);
+      const rad = p.pickIdx !== undefined ? 15 : p.pts >= 60 ? 11 : 8;
+      if (d > rad) continue;
+      const pri = (p.pickIdx !== undefined ? 500 : 0) + p.pts - d * 4;
+      if (pri > bestScore) { bestScore = pri; best = p; }
+    }
+    return best;
+  };
+  // a corner (or the small dot between two corners) of the drawn area under the pointer
+  const hitVertex = (x, y, rad = 10) => {
+    const sp = expState.polyScreen;
+    if (!sp || expState.draft || !prefs.region || !Array.isArray(prefs.region.poly)) return null;
+    for (let i = 0; i < sp.length; i++) if (Math.hypot(sp[i][0] - x, sp[i][1] - y) <= rad) return { idx: i, mid: false };
+    if (sp.length <= 16) {
+      for (let i = 0; i < sp.length; i++) {
+        const j = (i + 1) % sp.length;
+        if (Math.hypot((sp[i][0] + sp[j][0]) / 2 - x, (sp[i][1] + sp[j][1]) / 2 - y) <= rad - 2) return { idx: i, mid: true };
+      }
+    }
+    return null;
+  };
+  const finishFreehand = (fh, W, H) => {
+    let tol = 2.5, pts = simplifyPath(fh, tol);
+    while (pts.length > 36) { tol *= 1.5; pts = simplifyPath(fh, tol); }
+    if (pts.length > 3 && Math.hypot(pts[0][0] - pts[pts.length - 1][0], pts[0][1] - pts[pts.length - 1][1]) < 14) pts.pop();
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    if (pts.length < 3 || Math.max(...xs) - Math.min(...xs) < 14 || Math.max(...ys) - Math.min(...ys) < 14) { drawExploreMap(); return; }
+    const first = screenToLL(pts[0][0], pts[0][1], W, H);
+    commitDrawnArea(pts.map((p, i) => (i === 0 ? first : screenToLL(p[0], p[1], W, H, first[0]))));
+  };
+
+  const pointers = new Map();
+  let pinch = null;
+
+  canvas.addEventListener("pointerdown", (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    const [x, y, W, H] = localXY(e);
+    pointers.set(e.pointerId, [x, y]);
+    try { canvas.setPointerCapture?.(e.pointerId); } catch {}
+    if (pointers.size === 2) {
+      // two fingers: pinch to zoom
+      const [a, b] = [...pointers.values()];
+      pinch = { d0: Math.max(10, Math.hypot(a[0] - b[0], a[1] - b[1])), span0: expState.span };
+      expState.dragging = false;
+      expState.freehand = null;
+      canvas.classList.remove("panning");
+      return;
+    }
+    if (pointers.size > 2) return;
+    if (tip) tip.hidden = true;
+    expState.dragging = true;
+    expState.moved = false;
+    expState.startX = x;
+    expState.startY = y;
+    expState.startLat = expState.lat;
+    expState.startLon = expState.lon;
+    const vh = hitVertex(x, y, e.pointerType === "touch" ? 16 : 10);
+    if (vh) {
+      expState.dragKind = "vertex";
+      if (vh.mid) {
+        const poly = prefs.region.poly;
+        poly.splice(vh.idx + 1, 0, screenToLL(x, y, W, H, poly[vh.idx][0]));
+        expState.vertexIdx = vh.idx + 1;
+        expState.moved = true;
+      } else expState.vertexIdx = vh.idx;
+      scheduleExploreDraw();
+    } else if (expState.tool === "draw") {
+      expState.dragKind = "draw";
+    } else {
+      expState.dragKind = "pan";
+      canvas.classList.add("panning");
+    }
+  });
+
+  canvas.addEventListener("pointermove", (e) => {
+    const [x, y, W, H] = localXY(e);
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, [x, y]);
+    if (pinch && pointers.size >= 2) {
+      const [a, b] = [...pointers.values()];
+      expState.span = clampSpan((pinch.span0 * pinch.d0) / Math.max(10, Math.hypot(a[0] - b[0], a[1] - b[1])), W, H);
+      markViewMoved();
+      scheduleExploreDraw();
+      return;
+    }
+    if (!expState.dragging) {
+      if (expState.tool === "draw" && expState.draft) {
+        expState.cursor = [x, y];
+        if (tip) tip.hidden = true;
+        scheduleExploreDraw();
+        return;
+      }
+      canvas.classList.toggle("on-handle", !!hitVertex(x, y));
+      const hit = expState.tool === "draw" ? null : hitPoint(x, y);
+      const nextSlug = hit ? hit.ev.slug : "";
+      if (nextSlug !== expState.hoverSlug) {
+        expState.hoverSlug = nextSlug;
+        scheduleExploreDraw();
+      }
+      if (hit && tip) {
+        const c = COUNTRIES[hit.ev.cc];
+        const gainsTxt = hit.sc
+          ? hit.sc.gains.filter((x2) => !x2.minor).slice(0, 4).map((x2) => x2.label.replace(/^Completes /, "")).join(", ")
+          : "";
+        const dStr = origin ? fmtKm(km(origin, hit.ev)) : "";
+        tip.innerHTML = `<div><b>${flag(c?.iso)} ${esc(hit.ev.name)}</b> <small style="color:var(--muted)">parkrun</small>${hit.allDone ? ` <span class="tip-pts" style="background:var(--grass-soft);border-color:#9dd4a8;color:var(--grass-deep)">Visited ✓</span>` : `<span class="tip-pts">${Math.round(hit.pts)} pts</span>`}</div>`
+          + `<div style="color:var(--muted);margin-top:2px">${esc(hit.ev.loc || c?.name || "")}${dStr ? ` · ${dStr} away` : ""}</div>`
+          + (!hit.allDone && gainsTxt ? `<div style="margin-top:3px;color:var(--grass-deep);font-weight:700">Ticks off ${hit.ticks}: ${esc(gainsTxt)}</div>` : "");
+        tip.hidden = false;
+        const tx = Math.min(W - 260, Math.max(8, x + 14));
+        const ty = y > H - 95 ? Math.max(8, y - 78) : y + 14;
+        tip.style.left = tx + "px";
+        tip.style.top = ty + "px";
+      } else if (tip) {
+        tip.hidden = true;
+      }
+      return;
+    }
+
+    const dx = x - expState.startX, dy = y - expState.startY;
+    if (Math.hypot(dx, dy) > 5) expState.moved = true;
+    if (expState.dragKind === "pan") {
+      if (!expState.moved) return;
+      const { k } = expProj(W, H);
+      expState.lon = wrap180(expState.startLon - dx / k);
+      expState.lat = clampLat(mercLat(mercY(expState.startLat) + dy / k));
+      markViewMoved();
+      scheduleExploreDraw();
+    } else if (expState.dragKind === "vertex") {
+      const poly = prefs.region && prefs.region.poly;
+      if (!poly || !poly[expState.vertexIdx]) return;
+      poly[expState.vertexIdx] = screenToLL(Math.max(0, Math.min(W, x)), Math.max(0, Math.min(H, y)), W, H, poly[expState.vertexIdx][0]);
+      scheduleExploreDraw();
+    } else if (expState.dragKind === "draw") {
+      if (expState.draft && expState.draft.length) {
+        expState.cursor = [x, y];
+      } else if (expState.moved) {
+        // holding and dragging on an empty map sketches the area freehand
+        if (!expState.freehand) expState.freehand = [[expState.startX, expState.startY]];
+        const fh = expState.freehand, last = fh[fh.length - 1];
+        const px = Math.max(0, Math.min(W, x)), py = Math.max(0, Math.min(H, y));
+        if (Math.hypot(px - last[0], py - last[1]) >= 4) fh.push([px, py]);
+      }
+      scheduleExploreDraw();
+    }
+  });
+
+  const finishPointer = (e) => {
+    const [x, y, W, H] = localXY(e);
+    pointers.delete(e.pointerId);
+    if (pinch) {
+      if (pointers.size < 2) pinch = null;
+      expState.dragging = false;
+      return;
+    }
+    if (!expState.dragging) return;
+    expState.dragging = false;
+    canvas.classList.remove("panning");
+    const kind = expState.dragKind;
+
+    if (kind === "vertex") {
+      if (expState.moved && prefs.region && Array.isArray(prefs.region.poly)) {
+        prefs.region.box = polyBox(prefs.region.poly);
+        savePrefs();
+        renderPicks();
+      } else drawExploreMap();
+      return;
+    }
+
+    if (kind === "draw") {
+      if (expState.freehand) {
+        const fh = expState.freehand;
+        expState.freehand = null;
+        if (fh.length >= 6) finishFreehand(fh, W, H);
+        else drawExploreMap();
+        return;
+      }
+      // a click adds a corner; clicking the first corner again closes the shape
+      const d = expState.draft || (expState.draft = []);
+      const { toXY } = expProj(W, H);
+      if (d.length >= 3) {
+        const [fx, fy] = toXY(d[0][1], d[0][0]);
+        if (Math.hypot(fx - x, fy - y) <= 12) { commitDrawnArea(d); return; }
+      }
+      const last = d[d.length - 1];
+      const tooClose = last && (() => { const [lx, ly] = toXY(last[1], last[0]); return Math.hypot(lx - x, ly - y) < 5; })();
+      if (!tooClose) d.push(screenToLL(x, y, W, H, d.length ? d[0][0] : undefined));
+      expState.cursor = [x, y];
+      updateExploreOverlays();
+      drawExploreMap();
+      return;
+    }
+
+    if (!expState.moved) {
+      const hit = hitPoint(x, y);
+      if (hit) {
+        if (hit.pickIdx !== undefined) {
+          goToPick(hit.pickIdx);
+        } else {
+          const r2 = (n) => Math.round(n * 100) / 100;
+          const { toLL } = expProj(W, H);
+          const padLat = Math.max(1.2, (toLL(0, 0)[0] - toLL(0, H)[0]) * 0.18);
+          const padLon = padLat / Math.max(0.35, Math.cos((hit.ev.lat * Math.PI) / 180));
+          fadeSwap($("#radar-sel"), `<b>${flag(COUNTRIES[hit.ev.cc]?.iso)} ${esc(hit.ev.name)} parkrun</b> · ${Math.round(hit.pts)} challenge pts${origin ? ` (${fmtKm(km(origin, hit.ev))} away)` : ""}. <button type="button" class="linkbtn" data-exp-around="${hit.ev.slug}" data-box="${r2(hit.ev.lon - padLon)},${r2(hit.ev.lat - padLat)},${r2(hit.ev.lon + padLon)},${r2(hit.ev.lat + padLat)}">Search near ${esc(hit.ev.name)}</button> · <a href="https://${COUNTRIES[hit.ev.cc]?.url}/${hit.ev.slug}/" target="_blank" rel="noopener">Course page ↗</a>`);
+        }
+      }
+    }
+    drawExploreMap();
+  };
+
+  canvas.addEventListener("pointerup", finishPointer);
+  canvas.addEventListener("pointercancel", (e) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) pinch = null;
+    expState.dragging = false;
+    expState.freehand = null;
+    canvas.classList.remove("panning");
+    drawExploreMap();
+  });
+  canvas.addEventListener("pointerleave", () => {
+    if (expState.dragging) return;
+    if (tip) tip.hidden = true;
+    if (expState.cursor) { expState.cursor = null; scheduleExploreDraw(); }
+  });
+
+  canvas.addEventListener("dblclick", (e) => {
+    const [x, y, W, H] = localXY(e);
+    if (expState.tool === "draw") {
+      // double-click finishes the shape, like most map drawing tools
+      if (expState.draft && expState.draft.length >= 3) { e.preventDefault(); commitDrawnArea(expState.draft); }
+      return;
+    }
+    const vh = hitVertex(x, y);
+    if (vh) {
+      // double-click a corner to remove it
+      const poly = prefs.region.poly;
+      if (poly.length > 3) {
+        poly.splice(vh.mid ? vh.idx + 1 : vh.idx, 1);
+        prefs.region.box = polyBox(poly);
+        savePrefs();
+        renderPicks();
+      }
+      return;
+    }
+    if (!hitPoint(x, y)) zoomAt(x, y, W, H, 0.55);
+  });
+
+  canvas.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const [mx, my, W, H] = localXY(e);
+    // small steps for trackpads, one clear step per notch of a mouse wheel
+    const dy = Math.max(-120, Math.min(120, e.deltaY * (e.deltaMode === 1 ? 33 : 1)));
+    zoomAt(mx, my, W, H, Math.exp(dy * (e.ctrlKey ? 0.01 : 0.0022)));
+  }, { passive: false });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !mapExpanded) return;
+    if (expState.draft || expState.freehand) { cancelExploreDraft(); renderExploreUI(); }
+    else if (expState.tool === "draw") { expState.tool = "pan"; renderExploreUI(); }
+  });
+
+  $("#radar-sel")?.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-exp-around]");
+    if (!b) return;
+    const ev = BYSLUG.get(b.dataset.expAround);
+    const nums = (b.dataset.box || "").split(",").map(Number);
+    if (nums.length === 4 && nums.every(Number.isFinite)) {
+      expState.viewDirty = true;
+      setMapRegion({ id: "around", label: `Near ${ev ? ev.name : "pin"}`, box: nums });
+    }
+  });
+
+  window.addEventListener("resize", () => { if (mapExpanded) scheduleExploreDraw(); });
+}
+initAreaExplorer();
 function goToPick(i) {
   selectPick(i);
   const card = document.querySelector(`#cards .pick[data-i="${i}"]`);
@@ -3821,22 +5201,24 @@ function renderGlobeUI() {
   const gCtx = globeActiveCtx();
   if (!gCtx || !CC_META || !$("#globe-flags")) return;
   const visitedCC = gCtx.s.cc;
+  const bm = typeof boardMember === "function" && current ? boardMember() : { id: "0", ctx: gCtx, s: gCtx.s, r: current };
+  const cr = rankCountriesFor([bm], origin || gCtx.home);
   if (!globeSelCC || !CC_META[globeSelCC]) {
-    const firstVis = [...visitedCC].find((c) => c !== (gCtx.home ? gCtx.home.cc : -1)) || [...visitedCC][0] || 97;
-    globeSelCC = firstVis;
+    globeSelCC = (cr.unvis[0] && cr.unvis[0].cc) || [...visitedCC][0] || 97;
   }
-  const allCC = Object.keys(COUNTRIES).map(Number).sort((a, b) => {
-    const va = visitedCC.has(a) ? 1 : 0, vb = visitedCC.has(b) ? 1 : 0;
-    return vb - va || CC_META[b].count - CC_META[a].count;
-  });
-  $("#globe-title").innerHTML = `<span data-count="${visitedCC.size}">${visitedCC.size}</span> of <span data-count="${allCC.length}">${allCC.length}</span> parkrun countries &amp; territories visited`;
+  const orderedCC = cr.countries.map((x) => x.cc);
+  $("#globe-title").innerHTML = `<span data-count="${visitedCC.size}">${visitedCC.size}</span> of <span data-count="${orderedCC.length}">${orderedCC.length}</span> parkrun countries &amp; territories visited`;
   const homeName = gCtx.home ? `${gCtx.home.name} (${COUNTRIES[gCtx.home.cc]?.name || "UK"})` : "your home parkrun";
-  $("#globe-sub").textContent = `Showing travel curves from ${homeName} + real-time ISS orbit. Click any country flag (including Jersey, Guernsey & Isle of Man) or the live ISS satellite to explore!`;
-  $("#globe-flags").innerHTML = allCC.map((cc) => {
+  $("#globe-sub").textContent = `Countries below are ordered by recommended priority (maximum challenges you can tick off next), with travel arcs from ${homeName}.`;
+  $("#globe-flags").innerHTML = cr.countries.map((c) => {
+    const cc = c.cc;
     const m = CC_META[cc];
     const done = visitedCC.has(cc);
     const sel = !issState.selected && cc === globeSelCC;
-    return `<button class="gflag ${done ? "done" : ""} ${sel ? "sel" : ""}" type="button" data-gcc="${cc}" aria-pressed="${sel}"><span>${flag(m.iso)}</span><span>${esc(m.name)}</span>${done ? " ✓" : `<small style="opacity:.7">(${m.count})</small>`}</button>`;
+    const tip = done
+      ? `${m.name}: already visited (${m.count} parkruns in country)`
+      : `#${c.recRank} recommended next: ${c.best ? `${c.best.ev.name} parkrun ticks off ${c.bestTicks} (${c.bestPts} pts)` : `${m.count} parkruns`}`;
+    return `<button class="gflag ${done ? "done" : ""} ${sel ? "sel" : ""}" type="button" data-gcc="${cc}" aria-pressed="${sel}" title="${esc(tip)}">${!done && c.recRank ? `<span class="grank">#${c.recRank}</span>` : ""}<span>${flag(m.iso)}</span><span>${esc(m.name)}</span>${done ? " ✓" : c.bestTicks ? `<span class="gticks">+${c.bestTicks}</span>` : `<small style="opacity:.7">(${m.count})</small>`}</button>`;
   }).join("");
 
   if (issState.selected && $("#globe-spot")) {
@@ -3854,15 +5236,21 @@ function renderGlobeUI() {
   }
 
   const sel = CC_META[globeSelCC];
+  const selRank = cr.byCC.get(globeSelCC);
   if (sel && $("#globe-spot")) {
     const done = visitedCC.has(sel.cc);
     const myRunsHere = [...gCtx.s.visited.values()].filter((v) => v.ev && v.ev.cc === sel.cc);
-    const dist = gCtx.home ? fmtKm(km(gCtx.home, sel)) : "";
+    const refOrigin = origin || gCtx.home;
+    const bestEv = selRank && selRank.best ? selRank.best.ev : null;
+    const dist = refOrigin ? fmtKm(km(refOrigin, bestEv || sel)) : "";
+    const bestSummary = selRank && selRank.best
+      ? `Best haul here: <b>${esc(selRank.best.ev.name)} parkrun</b> · ticks off <b>${selRank.bestTicks}</b> (${selRank.bestPts} pts: ${esc(selRank.best.gains.filter((g) => !g.minor).slice(0, 3).map((g) => g.label.replace(/^Completes /, "")).join(", ") || "Tourism")})`
+      : `Includes ${esc(sel.sample.join(", "))} parkrun${sel.count > 3 ? ` & ${sel.count - 3} more` : ""}`;
     $("#globe-spot").innerHTML = done
       ? `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${flag(sel.iso)} ${esc(sel.name)} · Visited! 🏆</b><span style="font-size:12px;color:var(--grass-deep);font-weight:700">${myRunsHere.length} parkrun${myRunsHere.length === 1 ? "" : "s"} run here · ${sel.count} total in country</span></div>`
-        + `<div style="margin-top:4px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>Run here: <b>${esc(myRunsHere.slice(0, 5).map((v) => v.name).join(", "))}${myRunsHere.length > 5 ? "…" : ""}</b></span><button class="linkbtn" type="button" data-fly-rank="${sel.cc}" style="color:var(--grass-deep);font-weight:800">Rank ${esc(sel.name)} parkruns ↑</button></div>`
-      : `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${flag(sel.iso)} ${esc(sel.name)} · New Country Flag 🎯</b><span style="font-size:12px;color:var(--gold-ink);font-weight:700">${sel.count} parkruns${dist ? ` · ~${dist} from home` : ""}</span></div>`
-        + `<div style="margin-top:4px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>Includes ${esc(sel.sample.join(", "))} parkrun${sel.count > 3 ? ` & ${sel.count - 3} more` : ""}.</span><button class="linkbtn" type="button" data-fly-rank="${sel.cc}" style="color:var(--grass-deep);font-weight:800">Rank ${esc(sel.name)} parkruns ↑</button></div>`;
+        + `<div style="margin-top:4px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>Run here: <b>${esc(myRunsHere.slice(0, 4).map((v) => v.name).join(", "))}${myRunsHere.length > 4 ? "…" : ""}</b>${selRank && selRank.best ? ` · Next best: <b>${esc(selRank.best.ev.name)}</b> (${selRank.bestPts} pts)` : ""}</span><button class="linkbtn" type="button" data-fly-rank="${sel.cc}" style="color:var(--grass-deep);font-weight:800">See top picks in ${esc(sel.name)} ↑</button></div>`
+      : `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><b>${flag(sel.iso)} ${esc(sel.name)} · ${selRank && selRank.recRank ? `#${selRank.recRank} Recommended Next Country 🎯` : "New Country Flag 🎯"}</b><span style="font-size:12px;color:var(--gold-ink);font-weight:700">${selRank && selRank.best ? `Up to ${selRank.bestTicks} challenges (${selRank.bestPts} pts)` : `${sel.count} parkruns`}${dist ? ` · ~${dist} away` : ""}</span></div>`
+        + `<div style="margin-top:4px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>${bestSummary} · ${sel.count} course${sel.count === 1 ? "" : "s"}</span><button class="linkbtn" type="button" data-fly-rank="${sel.cc}" style="color:var(--grass-deep);font-weight:800">Rank ${esc(sel.name)} parkruns ↑</button></div>`;
   }
 }
 
@@ -4243,7 +5631,7 @@ function initGlobe() {
     globeTargetLon = null; globeTargetLat = null;
     moved = false;
     globeDragStart = { x: e.clientX, y: e.clientY, lon: globeRotLon, lat: globeRotLat };
-    canvas.setPointerCapture?.(e.pointerId);
+    try { canvas.setPointerCapture?.(e.pointerId); } catch {}
   });
   canvas.addEventListener("pointermove", (e) => {
     if (!globeDragging || !globeDragStart) return;
@@ -4295,10 +5683,15 @@ function initGlobe() {
     if (!b) return;
     const m = CC_META[+b.dataset.flyRank];
     if (!m) return;
-    prefs.mode = "any";
     prefs.country = String(m.cc);
+    prefs.region = null;
     savePrefs();
-    setOrigin({ lat: m.lat, lon: m.lon, cc: m.cc, label: m.name, kind: "place" });
+    if (!origin) {
+      setOrigin({ lat: m.lat, lon: m.lon, cc: m.cc, label: m.name, kind: "place" });
+    } else {
+      if (mapExpanded) frameExploreForCountry(m.cc);
+      renderPicks();
+    }
     $("#picks-block")?.scrollIntoView({ behavior: REDUCED() ? "auto" : "smooth", block: "start" });
   });
 
